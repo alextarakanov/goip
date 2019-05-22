@@ -1,0 +1,341 @@
+<!--
+<?php
+print <<<EOT
+-->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="style.css" rel="stylesheet" type="text/css">
+<title>SIM Slot管理</title>
+<script src="check.js"></script>
+<script language="javascript">
+function unselectall()
+	{
+	    if(document.myform.chkAll.checked){
+		document.myform.chkAll.checked = document.myform.chkAll.checked&0;
+	    } 	
+	}
+
+function CheckAll(form)
+	{
+		var trck;
+		var e;
+		for (var i=0;i<form.elements.length;i++)
+	    {
+		    e = form.elements[i];
+		    if (e.type == 'checkbox' && e.id != "chkAll" && e.disabled==false){
+				e.checked = form.chkAll.checked;
+		 		do {e=e.parentNode} while (e.tagName!="TR") 
+		 		if(form.chkAll.checked)
+		 			e.className = 'even marked';
+		 		else
+		 			e.className = 'even';
+			}
+	    }
+		//form.chkAll.classname = 'even';
+	}
+
+function mouseover(obj) {
+                obj.className += ' hover';
+				//alert(obj.className);
+            	
+			}
+
+function mouseout(obj) {
+            	obj.className = obj.className.replace( ' hover', '' );
+				//alert(obj.className);
+			}
+
+function trclick(obj) {
+		//alert("ddddd");
+        var checkbox = obj.getElementsByTagName( 'input' )[0];
+        //if ( checkbox && checkbox.type == 'checkbox' ) 
+        checkbox.checked ^= 1;
+		if(checkbox.checked)
+			obj.className = 'even marked';
+		else obj.className = 'even';
+//		var ckpage=document.modifyform.elements['chkAll'+num];
+	    if(document.myform.chkAll.checked){
+		document.myform.chkAll.checked = document.myform.chkAll.checked&0;
+	    } 	
+		
+
+		}
+
+function showbind(value){
+        if(value != 0) showbind1.style.display='none';
+        else showbind1.style.display='';
+}
+
+</script>
+</head>
+<body leftmargin="2" topmargin="0" marginwIdth="0" marginheight="0">
+<table wIdth="100%" border="0" align="center" cellpadding="2" cellspacing="1" class="border">
+  <tr class="topbg"> 
+    <td height="22" colspan="2" align="center"><strong>SIM Slot管理</strong></td>
+  </tr>
+  <tr class="tdbg"> 
+    <td wIdth="100" height="30"><strong>管理导航:</strong></td>
+    <td height="30"><a href="?name=$_REQUEST[name]" target=main>刷新</a>&nbsp;|&nbsp;</td>
+  </tr>
+</table>
+<!--
+EOT;
+if($action=="main") {
+//if($_GET['name']) 
+$op="<td align=center><b>操作</b></td>";
+print <<<EOT
+-->
+<table width="100%" height="25"  border="0" cellpadding="0" cellspacing="0">
+  <tr class="topbg">
+    <td width="8%">&nbsp;</td>
+    <td width="92%" height="25"><strong>当前位置: SIM Bank({$_GET['name']}) Slot 列表</strong></td>
+  </tr>
+</table>
+<form action="sim.php?action=del" method=post name=myform onSubmit="return confirm('确认删除?')">
+<table wIdth="100%"  border="0" cellspacing="2" cellpadding="2">
+	<tr class=title>
+		<td align="center"><b>线路状态</b></td>
+		<td align="center"><b>Slot ID</b></td>
+		<td align="center"><b>绑定方式</b></td>
+		<td align="center"><b>所在组</b></td>
+		<td align="center"><b>计划绑定GoIP线路</b></td>
+		<td align="center"><b>实际绑定GoIP线路</b></td>
+		<td align="center"><b>IMEI模式</b></td>
+		<td align="center"><b>手设IMEI</b></td>
+		<td align="center"><b>SIM卡信息</b></td>
+		<td align="center"><b>剩余资源</b></td>
+		<td align="center"><b>连续警告</b></td>
+		<td align="center"><b>计时单位(秒)</b></td>
+		<td align="center"><b>是否睡眠</b></td>
+		<td align="center"><b>是否禁用</b></td>
+		{$op}
+	</tr>
+<!--
+EOT;
+$j=0;
+foreach($rsdb as $rs) {
+if($rs['line_name']==0) $rs['line_name']="";
+if($rs['plan_line_name']==0) $rs['plan_line_name']="";
+$op="<td align=center><a href=\"logs.php?sim_name={$rs['sim_name']}\">日志</a> | <a href=\"call_record.php?sim_name={$rs['sim_name']}\">通话记录</a> | <a href=\"cdr.php?type=sim&name={$rs['sim_name']}\">CDR</a> | <a href=\"?action=netcheck&sim_name={$rs['sim_name']}&name={$rs['bank_name']}\">网络测试</a></td>";
+if($_GET[name]) $op="<td align=center><a href=\"logs.php?sim_name={$rs['sim_name']}\">日志</a> | <a href=\"call_record.php?sim_name={$rs['sim_name']}\">通话记录</a> | <a href=\"cdr.php?type=sim&name={$rs['sim_name']}\">CDR</a> | <a href=\"sim.php?action=modify&name={$rs['sim_name']}\">修改</a> | <a href=\"sim_period.php?sim_name={$rs['sim_name']}\">时段限制</a> | <a href=\"sim.php?action=reset_limit&sim_name=$rs[sim_name]&bank_name=$rs[bank_name]\">重置总限制</a> | <a href=\"sim.php?action=reset_period&sim_name=$rs[sim_name]&bank_name=$rs[bank_name]\">重置时段限制</a> | <a href=\"?action=awaken&sim_name={$rs['sim_name']}&bank_name=$rs[bank_name]\">唤醒</a> | <a href=\"?action=netcheck&sim_name={$rs['sim_name']}&name={$rs['bank_name']}\">网络测试</a></td>";
+print <<<EOT
+-->
+	<tr class="even">
+                <td align="center">{$rs['alive']}</td>
+                <td align="center">{$rs['sim_name']}</td>
+                <td align="center">{$rs['bind_type']}</td>
+                <td align="center">{$rs['sim_team_name']}</td>
+                <td align="center">{$rs['plan_line_name']}</td>
+                <td align="center">{$rs['line_name']}</td>
+		<td align="center">{$rs['imei_type_name']}</td>
+                <td align="center">{$rs['imei']}</td>
+		<td align="center" title="IMSI:{$rs['imsi']}\nICCID:{$rs['iccid']}\nIMEI:{$rs['last_imei']}">SIM Info</td>
+		<td align="center" title="{$rs['remain_limit']}">{$rs['remain_state']}</td>
+		<td align="center" title="{$rs['limit_title']}">{$rs['limit_state']}</td>
+                <td align="center">{$rs['time_unit']}</td>
+		<td align="center">{$rs['sleep']}</td>
+                <td align="center">{$rs['disable']}</td>
+		{$op}
+    </tr>
+
+<!--
+EOT;
+$j++;
+}
+print <<<EOT
+-->
+</table>
+<input type="hIdden" name="boxs" value="{$j}">
+<table wIdth="100%"  border="0" cellspacing="2" cellpadding="2">
+
+
+					<tr>
+						<td  align=center>{$fenye}</td>
+					</tr>
+</table>
+<!--
+EOT;
+}
+else if($action=="modify")
+{
+print <<<EOT
+-->
+<table width="100%" height="25"  border="0" cellpadding="0" cellspacing="0">
+  <tr class="topbg">
+    <td width="8%">&nbsp;</td>
+    <td width="92%" height="25"><strong>当前位置: 修改SIM Slot</strong></td>
+  </tr>
+</table>
+<form method="post" action="sim.php?action=savemodify&id=$rs[bank_id]" name="form1" onSubmit="javascript:return check_pw();">
+  <br>
+  <table wIdth="700" border="0" align="center" cellpadding="2" cellspacing="1" class="border" >
+    <tr class="title"> 
+      <td height="22" colspan="2"> <div align="center"><strong>修改SIM Slot配置</strong></div></td>
+    </tr>
+    <tr> 
+      <td wIdth="300" align="right" class="tdbg"><strong>SIM Slot ID:</strong></td>
+      <td class="tdbg">$rs[sim_name]</td>
+    </tr>
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>所在组:</strong></td>
+      <td class="tdbg">
+          <select name="team_id" style="width:135" onchange="showbind(this.value)">
+        <option value="0" $select >无(手动固定绑定)</option>
+<!--                                                                                                              
+EOT;
+foreach($prsdb as $prs){                                                                                          
+                                                                                                                  
+if($rs[sim_team_id]==$prs[sim_team_id])                                                                         
+        $select=' selected';                                                                                      
+else                                                                                                              
+        $select='';                                                                                               
+print <<<EOT
+-->
+        <option value="$prs[sim_team_id]" $select >$prs[sim_team_name]</option>
+
+<!--
+EOT;
+}
+if($rs[sim_team_id]!=0) $display='none'; 
+else $display='';
+print <<<EOT
+-->
+      </select></td>
+    </tr>
+    <tr style="display:{$display}" Id='showbind1'>
+      <td wIdth="300" align="right" class="tdbg"><strong>固定绑定GoIP线路:</strong></td>
+      <td class="tdbg">
+          <select name="line_name" style="width:135">
+        <option value="0">无</option>
+<!--                                                                                                              
+EOT;
+foreach($grsdb as $prs){                                                                                          
+                                                                                                                  
+if($rs[plan_line_name]==$prs[line_name])                                                                         
+        $select=' selected';                                                                                      
+else                                                                                                              
+        $select='';                                                                                               
+print <<<EOT
+-->
+        <option value="$prs[line_name]" $select >$prs[line_name]</option>
+
+<!--
+EOT;
+}
+print <<<EOT
+-->
+      </select></td>
+    </tr>
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>IMEI模式:</strong></td>
+      <td class="tdbg">
+        <select name="imei_mode">
+          <option value="0" $imei_ck1>GoIP Default</option>
+          <option value="1" $imei_ck2>Random</option>
+          <option value="2" $imei_ck3>Set with SIM</option>
+          <option value="3" $imei_ck4>Random with IMSI</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>预设IMEI号:</strong></td>
+      <td class="tdbg"><input type="input" name="imei" value="$rs[imei]" onblur="onfocus_check_integer(this, 0, 999999999999999)"></td>
+    </tr>
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>总呼叫限制时间(分钟):</strong></td>
+      <td class="tdbg"><input type="input" name="time_limit" value="$rs[time_limit]" onblur="onfocus_check_integer(this, -1, 42949672)"></td>
+    </tr>
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>呼叫时间计算单位(秒):</strong></td>
+      <td class="tdbg"><input type="input" name="time_unit" value="$rs[time_unit]" onblur="onfocus_check_integer(this, 1, 42949672)"></td>
+    </tr>
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>总呼出次数限制:</strong></td>
+      <td class="tdbg"><input type="input" name="count_limit" value="$rs[count_limit]" onblur="onfocus_check_integer(this, -1, 42949672)">(是否包含未接通呼叫<input name="count_limit_no_connect" type='checkbox' value="1" $ci_no_connect_ck>)</td>
+    </tr>
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>未接通呼出次数限制:</strong></td>
+      <td class="tdbg"><input type="input" name="no_connected_limit" value="$rs[no_connected_limit]" onblur="onfocus_check_integer(this, -1, 42949672)"></td>
+    </tr>
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>连续呼叫无响铃警告线(次数):</strong></td>
+      <td class="tdbg"><input type="input" name="no_ring_limit" value="$rs[no_ring_limit]" onblur="onfocus_check_integer(this, -1, 42949672)">超出后禁用<input name="no_ring_disable" type='checkbox' value="1" $wa_ck1></td>
+    </tr>
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>连续呼叫无响应警告线(次数):</strong></td>
+      <td class="tdbg"><input type="input" name="no_answer_limit" value="$rs[no_answer_limit]" onblur="onfocus_check_integer(this, -1, 42949672)">超出后禁用<input name="no_answer_disable" type='checkbox' value="1" $wa_ck2></td>
+    </tr>
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>连续呼叫短通话警告线(次数):</strong></td>
+      <td class="tdbg"><input type="input" name="short_call_limit" value="$rs[short_call_limit]" onblur="onfocus_check_integer(this, -1, 42949672)">超出后禁用<input name="short_call_disable" type='checkbox' value="1" $wa_ck3></td>
+    </tr>
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>短通话时间定义(秒):</strong></td>
+      <td class="tdbg"><input type="input" name="short_time" value="$rs[short_time]" onblur="onfocus_check_integer(this, 1, 42949672)"></td>
+    </tr>
+
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>是否禁用此线路</strong></td>
+      <td class="tdbg">
+        <select name="dev_disable">
+          <option value="0" $ck1>启用</option>
+          <option value="1" $ck2>禁用</option>
+        </select>
+      </td>
+    </tr>
+    <tr> <td height="20" colspan="2" align="center"  class="tdbg">
+	限制=-1 表示没有限制。
+	       	</td></tr>	
+    <tr> 
+      <td height="40" colspan="2" align="center" class="tdbg">
+	<input name="sim_name" type="hIdden" Id="sim_name" value="{$rs['sim_name']}">
+	<input name="bank_name" type="hIdden" Id="bank_name" value="{$rs['bank_name']}">
+        <input name="oldname" type="hIdden" Id="oldname" value="{$rs['bank_name']}">
+        <input name="old_team_id" type="hIdden" Id="old_team_id" value="{$rs['sim_team_id']}">
+        <input name="old_disable" type="hIdden" Id="old_disable" value="{$rs['dev_disable']}">
+        <input  type="submit" name="Submit" value="确定" style="cursor:hand;"> 
+        &nbsp; <input name="Cancel" type="button" Id="Cancel" value="取消" onClick="window.location.href='sim.php?name=$rs[bank_name]'" style="cursor:hand;">
+	&nbsp; <input name="Reset" type="button" Id="Reset" value="重置总限制" onClick="window.location.href='sim.php?action=reset_limit&sim_name=$rs[sim_name]&bank_name=$rs[bank_name]'" style="cursor:hand;">
+	&nbsp; <input name="Reset_Period" type="button" Id="Reset_Period" value="重置时段限制" onClick="window.location.href='sim.php?action=reset_period&sim_name=$rs[sim_name]&bank_name=$rs[bank_name]'" style="cursor:hand;"></td>
+    </tr>
+  </table>
+</form>
+<!--
+EOT;
+}
+print <<<EOT
+-->
+<script language="JavaScript" type="text/JavaScript">
+function check_pw()
+{
+  if(document.form1.Password.value=="" && document.form1.Submit.value=="Save")
+  	return true;
+  if(document.form1.Password.value=="")
+    {
+      alert("Please input password!");
+	  document.form1.Password.focus();
+      return false;
+    }
+    
+  if((document.form1.Password.value)!=(document.form1.PwdConfirm.value))
+    {
+      alert("Password and Confirm Password are different!");
+	  document.form1.PwdConfirm.select();
+	  document.form1.PwdConfirm.focus();	  
+      return false;
+    }
+}
+</script>
+</form>
+
+					  </td> 
+					</tr>
+</table>
+				
+</body>
+</html>
+<!--
+EOT;
+?>
+-->

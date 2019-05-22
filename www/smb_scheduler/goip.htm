@@ -1,0 +1,390 @@
+<!--
+<?php
+print <<<EOT
+-->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="style.css" rel="stylesheet" type="text/css">
+<title>user management</title>
+<script src="check.js"></script>
+<script language="javascript">
+function unselectall()
+	{
+	    if(document.myform.chkAll.checked){
+		document.myform.chkAll.checked = document.myform.chkAll.checked&0;
+	    } 	
+	}
+
+function CheckAll(form)
+	{
+		var trck;
+		var e;
+		for (var i=0;i<form.elements.length;i++)
+	    {
+		    e = form.elements[i];
+		    if (e.type == 'checkbox' && e.id != "chkAll" && e.disabled==false){
+				e.checked = form.chkAll.checked;
+		 		do {e=e.parentNode} while (e.tagName!="TR") 
+		 		if(form.chkAll.checked)
+		 			e.className = 'even marked';
+		 		else
+		 			e.className = 'even';
+			}
+	    }
+		//form.chkAll.classname = 'even';
+	}
+
+function mouseover(obj) {
+                obj.className += ' hover';
+				//alert(obj.className);
+            	
+			}
+
+function mouseout(obj) {
+            	obj.className = obj.className.replace( ' hover', '' );
+				//alert(obj.className);
+			}
+
+function trclick(obj) {
+		//alert("ddddd");
+        var checkbox = obj.getElementsByTagName( 'input' )[0];
+        //if ( checkbox && checkbox.type == 'checkbox' ) 
+        checkbox.checked ^= 1;
+		if(checkbox.checked)
+			obj.className = 'even marked';
+		else obj.className = 'even';
+//		var ckpage=document.modifyform.elements['chkAll'+num];
+	    if(document.myform.chkAll.checked){
+		document.myform.chkAll.checked = document.myform.chkAll.checked&0;
+	    } 	
+		
+
+		}
+
+function showbind(value){
+        if(value != 0) showbind1.style.display='none';
+        else showbind1.style.display='';
+}
+
+</script>
+</head>
+<body leftmargin="2" topmargin="0" marginwIdth="0" marginheight="0">
+<table wIdth="100%" border="0" align="center" cellpadding="2" cellspacing="1" class="border">
+  <tr class="topbg"> 
+    <td height="22" colspan="2" align="center"><strong>Goip参数设置</strong></td>
+  </tr>
+  <tr class="tdbg"> 
+    <td wIdth="100" height="30"><strong>管理导航:</strong></td>
+    <td height="30"><a href="goip.php" target=main>参数管理</a>&nbsp;|&nbsp;<a href="goip.php?action=add" target=main>添加机器</a></td>
+  </tr>
+</table>
+<!--
+EOT;
+if($action=="main") {
+print <<<EOT
+-->
+<br>
+<table width="100%" height="25"  border="0" cellpadding="0" cellspacing="0">
+  <tr class="topbg">
+    <td width="8%">&nbsp;</td>
+    <td width="92%" height="25"><strong>当前位置：goip参数设置</strong></td>
+  </tr>
+</table>
+<form action="goip.php?action=del" method=post name=myform onSubmit="return confirm('确认删除?')">
+<table wIdth="100%"  border="0" cellspacing="2" cellpadding="2">
+	<tr class=title>
+		<td align="center"><b>状态</b></td>
+		<td align="center"><b>GSM状态</b></td>
+		<td align="center"><b>ID</b></td>
+		<td align="center"><b>GoIP名称</b></td>
+		<td align="center"><b>线路ID</b></td>
+		<td align="center"><b>密码</b></td>
+		<td align="center"><b>绑定方式</b></td>
+		<td align="center"><b>所在组</b></td>
+		<td align="center"><b>实际SIM绑定</b></td>
+		<td align="center"><b>区域ID</b></td>
+		<td align="center"><b>区域名</b></td>
+		<td align="center"><b>线路数</b></td>
+		<td align="center"><b>是否禁用</b></td>
+		<td align=center><b>操作</b></td>
+	</tr>
+<!--
+EOT;
+$j=0;
+foreach($rsdb as $rs) {
+print <<<EOT
+-->
+	<tr class="even" >
+		<td align="center">{$rs['alive']}</td>
+		<td align="center">{$rs['gsm']}</td>
+		<td align="center">{$rs['goip_name']}</td>
+		<td align="center">{$rs['goip_tag']}</td>
+		<td align="center">{$rs['line_name']}</td>
+		<td align="center">{$rs['goip_pass']}</td>
+		<td align="center">{$rs['bind_type']}</td>
+		<td align="center">{$rs['sim_team_name']}</td>
+		<td align="center">{$rs['sim_name']}</td>
+		<td align="center">{$rs['goip_zone']}</td>
+		<td align="center">{$rs['zone_tag']}</td>
+		<td align="center">{$rs['goip_type']}</td>
+		<td align="center">{$rs['disable']}</td>
+				
+		<td align=center><a href="goip.php?action=modify&name={$rs['line_name']}">修改</a> | <a href="goip.php?action=reboot&name={$rs['goip_name']}" onClick="return confirm('确认重启Goip?')">重启设备</a> | <a href="goip.php?action=reboot_module&name={$rs['line_name']}"  onClick="return confirm('确认重启Goip模块（一条线路)?')">重启模块</a> | <a href="goip.php?name={$rs['goip_name']}&action=del" onClick="return confirm('删除本线路会删除本goip下的所有线路信息，确认删除?')">删除</a></td>
+    </tr>
+
+<!--
+EOT;
+$j++;
+}
+print <<<EOT
+-->
+</table>
+<input type="hIdden" name="boxs" value="{$j}">
+<table wIdth="100%"  border="0" cellspacing="2" cellpadding="2">
+
+
+					<tr>
+						<td  align=center>{$fenye}</td>
+					</tr>
+</table>
+<!--
+EOT;
+}
+else if($action=="add")
+{
+print <<<EOT
+-->
+<table width="100%" height="25"  border="0" cellpadding="0" cellspacing="0">
+  <tr class="topbg">
+    <td width="8%">&nbsp;</td>
+    <td width="92%" height="25"><strong>当前位置：添加goip</strong></td>
+  </tr>
+</table>
+<form method="post" action="goip.php?action=saveadd" name="form1" onSubmit="javascript:return check_pw();">
+  <br>
+  <br>
+  <table wIdth="400" border="0" align="center" cellpadding="2" cellspacing="1" class="border" >
+    <tr class="title"> 
+      <td height="22" colspan="2"> <div align="center"><strong>添 加 GOIP</strong></div></td>
+    </tr>
+    <tr> 
+      <td wIdth="150" align="right" class="tdbg"><strong>ID(数字):</strong></td>
+      <td class="tdbg"><input type="input" name="name" id="name" onblur="onfocus_check_integer(this, 1, 42949672)"></td>
+    </tr>
+    <tr>
+      <td wIdth="150" align="right" class="tdbg"><strong>GoIP 名称:</strong></td>
+      <td class="tdbg"><input type="input" name="goip_tag"></td>
+    </tr>
+    <tr> 
+      <td wIdth="150" align="right" class="tdbg"><strong>类型:</strong></td>
+      <td class="tdbg"><select name="goiptype" style="width:135">
+        <option value="1">1口</option>
+	<option value="4">4口</option>
+	<option value="8">8口</option>
+      </select></td>
+    </tr>
+    <tr>
+      <td wIdth="150" align="right" class="tdbg"><strong>所在goip组:</strong></td>
+      <td class="tdbg"><select name="team_id" style="width:135">                                                 
+	<option value="0">无(手动固定绑定)</option>
+<!--
+EOT;
+
+foreach($prsdb as $prs){
+
+print <<<EOT
+-->
+        <option value="$prs[sim_team_id]">$prs[sim_team_name]</option>
+
+<!--
+EOT;
+}
+print <<<EOT
+-->
+      </select></td>                                                                                              
+    </tr>
+
+    <tr> 
+      <td wIdth="150" align="right" class="tdbg"><strong>所在区域ID(数字):</strong></td>
+      <td class="tdbg"><input type="input" name="zone" id="zone" value='0' onblur="onfocus_check_integer(this, 0, 30000)"></td>
+    </tr>
+    <tr>
+      <td wIdth="150" align="right" class="tdbg"><strong>所在区域 名称:</strong></td>
+      <td class="tdbg"><input type="input" name="zone_tag"></td>
+    </tr>
+    <tr>
+      <td wIdth="150" align="right" class="tdbg"><strong>密码:</strong></td>
+      <td class="tdbg"><input type="password" name="Password"> </td>
+    </tr>
+    <tr> 
+      <td wIdth="150" align="right" class="tdbg"><strong>确认密码:</strong></td>
+      <td class="tdbg"><input type="password" name="PwdConfirm"> </td>
+    </tr>
+    <tr> 
+      <td height="40" colspan="2" align="center" class="tdbg"><input name="Action" type="hIdden" Id="Action" value="Modify"> 
+        <input  type="submit" name="Submit" value="添加" style="cursor:hand;"> 
+        &nbsp; <input name="Cancel" type="button" Id="Cancel" value="取消" onClick="window.location.href='goip.php'" style="cursor:hand;"></td>
+    </tr>
+  </table>
+</form>
+<!--
+EOT;
+}
+else if($action=="modify")
+{
+print <<<EOT
+-->
+<table width="100%" height="25"  border="0" cellpadding="0" cellspacing="0">
+  <tr class="topbg">
+    <td width="8%">&nbsp;</td>
+    <td width="92%" height="25"><strong>当前位置：修改用户</strong></td>
+  </tr>
+</table>
+<form method="post" action="goip.php?action=savemodify&id=$rs[goipid]" name="form1" onSubmit="javascript:return check_pw();">
+  <br>
+  <br>
+  <table wIdth="400" border="0" align="center" cellpadding="2" cellspacing="1" class="border" >
+    <tr class="title"> 
+      <td height="22" colspan="2"> <div align="center"><strong>修 改 GOIP 参数</strong></div></td>
+    </tr>
+    <tr> 
+      <td wIdth="150" align="right" class="tdbg"><strong>GoIP ID:</strong></td>
+      <td class="tdbg">$rs[line_name]</td>
+    </tr>
+    <tr>
+      <td wIdth="150" align="right" class="tdbg"><strong>GoIP 名称:</strong></td>
+      <td class="tdbg"><input type="input" name="goip_tag" id="goip_tag" value="$rs[goip_tag]"></td>
+    </tr>
+    <tr>
+      <td wIdth="150" align="right" class="tdbg"><strong>所在组:</strong></td>
+      <td class="tdbg">
+          <select name="team_id" style="width:135" onchange="showbind(this.value)">
+	<option value="0" $select >无(启用固定绑定)</option>
+<!--
+EOT;
+foreach($prsdb as $prs){
+
+if($rs[goip_team_id]==$prs[sim_team_id])
+        $select=' selected';
+else                                                                                                              
+        $select='';
+print <<<EOT
+-->
+        <option value="$prs[sim_team_id]" $select >$prs[sim_team_name]</option>
+
+<!--
+EOT;
+}
+if($rs[goip_team_id]!=0) $display='none'; 
+else $display='';
+print <<<EOT
+-->
+      </select></td>
+    </tr>
+    <tr style="display:{$display}" Id='showbind1'>
+      <td wIdth="150" align="right" class="tdbg"><strong>固定绑定Sim:</strong></td>
+      <td class="tdbg"><select name="sim_name" style="width:135">                                                 
+	<option value="0">无</option>
+<!--
+EOT;
+$old_plan_sim_name=0;
+foreach($grsdb as $prs){
+
+if($rs[line_name]==$prs[plan_line_name]){
+	$old_plan_sim_name=$prs[sim_name];
+        $select=' selected';
+}
+else                                                                                                              
+        $select='';
+print <<<EOT
+-->
+        <option value="$prs[sim_name]" $select >$prs[sim_name]</option>
+
+<!--
+EOT;
+}
+print <<<EOT
+-->
+
+      </select></td>                                                                                              
+    </tr>
+
+    <tr>
+      <td wIdth="150" align="right" class="tdbg"><strong>所在区域(数字):</strong></td>
+      <td class="tdbg"><input type="input" name="zone" id="zone" value="$rs[goip_zone]" onblur="onfocus_check_integer(this, 0, 30000)"></td>
+    </tr>
+    <tr>
+      <td wIdth="150" align="right" class="tdbg"><strong>所在区域名称:</strong></td>
+      <td class="tdbg"><input type="input" name="zone_tag" id="zone_tag" value="$rs[zone_tag]"></td>
+    </tr>
+    <tr>
+      <td wIdth="150" align="right" class="tdbg"><strong>是否禁用此线路</strong></td>
+      <td class="tdbg">
+        <select name="dev_disable">
+          <option value="0" $ck1>启用</option>
+          <option value="1" $ck2>禁用</option>
+        </select>
+      </td>
+    </tr>
+    <tr> 
+      <td wIdth="150" align="right" class="tdbg"><strong>新密码:</strong></td>
+      <td class="tdbg"><input type="password" name="Password" > </td>
+    </tr>
+    <tr> 
+      <td wIdth="150" align="right" class="tdbg"><strong>确认密码:</strong></td>
+      <td class="tdbg"><input type="password" name="PwdConfirm"> </td>
+    </tr>
+	<tr> <td height="20" colspan="2" align="center"  class="tdbg"><li>修改密码将修改整个设备的密码</li>
+		<li>不修改密码请将新密码和确认码留空</li> </td></tr>	
+    <tr> 
+      <td height="40" colspan="2" align="center" class="tdbg">
+	<input name="old_zone" type="hIdden" Id="old_zone" value="{$rs['goip_zone']}">
+	<input name="old_plan_sim_name" type="hIdden" Id="old_plan_sim_name" value="{$old_plan_sim_name}">
+	<input name="line_name" type="hIdden" Id="line_name" value="{$rs['line_name']}">
+	<input name="oldname" type="hIdden" Id="oldname" value="{$rs['goip_name']}"> 
+	<input name="old_team_id" type="hIdden" Id="old_team_id" value="{$rs['goip_team_id']}">
+	<input name="old_disable" type="hIdden" Id="old_disable" value="{$rs['dev_disable']}">
+        <input  type="submit" name="Submit" value="确定" style="cursor:hand;"> 
+        &nbsp; <input name="Cancel" type="button" Id="Cancel" value="取消" onClick="window.location.href='goip.php'" style="cursor:hand;"></td>
+    </tr>
+  </table>
+</form>
+<!--
+EOT;
+}
+print <<<EOT
+-->
+<script language="JavaScript" type="text/JavaScript">
+function check_pw()
+{
+  if(document.form1.Password.value=="" && document.form1.Submit.value=="确定")
+  	return true;
+  if(document.form1.Password.value=="")
+    {
+      alert("密码不能为空！");
+	  document.form1.Password.focus();
+      return false;
+    }
+    
+  if((document.form1.Password.value)!=(document.form1.PwdConfirm.value))
+    {
+      alert("初始密码与确认密码不同!");
+	  document.form1.PwdConfirm.select();
+	  document.form1.PwdConfirm.focus();	  
+      return false;
+    }
+}
+</script>
+</form>
+
+					  </td> 
+					</tr>
+</table>
+				
+</body>
+</html>
+<!--
+EOT;
+?>
+-->

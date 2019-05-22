@@ -1,0 +1,328 @@
+<!--
+<?php
+print <<<EOT
+-->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="../style.css" rel="stylesheet" type="text/css">
+<title>SIM Bank management</title>
+<script src="../check.js"></script>
+<script language="javascript">
+function unselectall()
+	{
+	    if(document.myform.chkAll.checked){
+		document.myform.chkAll.checked = document.myform.chkAll.checked&0;
+	    } 	
+	}
+
+function CheckAll(form)
+	{
+		var trck;
+		var e;
+		for (var i=0;i<form.elements.length;i++)
+	    {
+		    e = form.elements[i];
+		    if (e.type == 'checkbox' && e.id != "chkAll" && e.disabled==false){
+				e.checked = form.chkAll.checked;
+		 		do {e=e.parentNode} while (e.tagName!="TR") 
+		 		if(form.chkAll.checked)
+		 			e.className = 'even marked';
+		 		else
+		 			e.className = 'even';
+			}
+	    }
+		//form.chkAll.classname = 'even';
+	}
+
+function mouseover(obj) {
+                obj.className += ' hover';
+				//alert(obj.className);
+            	
+			}
+
+function mouseout(obj) {
+            	obj.className = obj.className.replace( ' hover', '' );
+				//alert(obj.className);
+			}
+
+function trclick(obj) {
+		//alert("ddddd");
+        var checkbox = obj.getElementsByTagName( 'input' )[0];
+        //if ( checkbox && checkbox.type == 'checkbox' ) 
+        checkbox.checked ^= 1;
+		if(checkbox.checked)
+			obj.className = 'even marked';
+		else obj.className = 'even';
+//		var ckpage=document.modifyform.elements['chkAll'+num];
+	    if(document.myform.chkAll.checked){
+		document.myform.chkAll.checked = document.myform.chkAll.checked&0;
+	    } 	
+		
+
+		}
+
+function showbind(value){
+	if(value != 0) showbind1.style.display='none';
+	else showbind1.style.display='';
+}
+
+</script>
+</head>
+<body leftmargin="2" topmargin="0" marginwIdth="0" marginheight="0">
+<table wIdth="100%" border="0" align="center" cellpadding="2" cellspacing="1" class="border">
+  <tr class="topbg"> 
+    <td height="22" colspan="2" align="center"><strong>SIM Bank Configuration</strong></td>
+  </tr>
+  <tr class="tdbg"> 
+    <td wIdth="100" height="30"><strong>Navigation:</strong></td>
+    <td height="30"><a href="sim_bank.php" target=main>List</a>&nbsp;|&nbsp;<a href="sim_bank.php?action=add" target=main>Add</a></td>
+  </tr>
+</table>
+<!--
+EOT;
+if($action=="main") {
+print <<<EOT
+-->
+<table width="100%" height="25"  border="0" cellpadding="0" cellspacing="0">
+  <tr class="topbg">
+    <td width="8%">&nbsp;</td>
+    <td width="92%" height="25"><strong>Current Location: SIM Bank List</strong></td>
+  </tr>
+</table>
+<form action="sim_bank.php?action=del" method=post name=myform onSubmit="return confirm('Sure to delete?')">
+<table wIdth="100%"  border="0" cellspacing="2" cellpadding="2">
+	<tr class=title>
+		<td align="center"><b>Bank ID</b></td>
+		<td align="center"><b>Bank Name</b></td>
+		<td align="center"><b>Type</b></td>
+		<td align="center"><b>Password</b></td>
+		<td align=center><b>Operation</b></td>
+	</tr>
+<!--
+EOT;
+$j=0;
+foreach($rsdb as $rs) {
+print <<<EOT
+-->
+	<tr class="even" onclick="window.location='all_sim.php?bank_name={$rs[name]}'">
+		<td align="center">{$rs['name']}</td>
+		<td align="center">{$rs['tag']}</td>
+		<td align="center">{$rs['type']}</td>
+		<td align="center">{$rs['password']}</td>
+				
+		<td align=center><a href="sim_bank.php?action=modify&name={$rs['name']}">Modify</a> | <a href="all_sim.php?bank_name={$rs['name']}">Slot List</a> | <a href="sim_bank.php?action=reboot&name={$rs['name']}"  onClick="return confirm('Sure to reboot SIM Bank?')">Reboot</a> | <a href="sim_bank.php?name={$rs['name']}&action=del" onClick="return confirm('Delete SIM Bank will delete all slots of this SIM Bank,sure to delete?')">Delete</a></td>
+    </tr>
+
+<!--
+EOT;
+$j++;
+}
+print <<<EOT
+-->
+</table>
+<input type="hIdden" name="boxs" value="{$j}">
+<table wIdth="100%"  border="0" cellspacing="2" cellpadding="2">
+
+
+	<tr>
+		<td  align=center>{$fenye}</td>
+	</tr>
+</table>
+<!--
+EOT;
+}
+else if($action=="add")
+{
+print <<<EOT
+-->
+<table width="100%" height="25"  border="0" cellpadding="0" cellspacing="0">
+  <tr class="topbg">
+    <td width="8%">&nbsp;</td>
+    <td width="92%" height="25"><strong>Current Location:Add SIM Bank</strong></td>
+  </tr>
+</table>
+<form method="post" action="sim_bank.php?action=saveadd" name="form1">
+  <br>
+  <table wIdth="700" border="0" align="center" cellpadding="2" cellspacing="1" class="border" >
+    <tr class="title"> 
+      <td height="22" colspan="2"> <div align="center"><strong>Add SIM Bank</strong></div></td>
+    </tr>
+    <tr> 
+      <td wIdth="200" align="right" class="tdbg"><strong>SIM Bank ID(Number):</strong></td>
+      <td class="tdbg"><input type="input" name="name" onblur="onfocus_check_integer(this, 1, 42949672)">*</td>
+    </tr>
+    <tr>
+      <td wIdth="200" align="right" class="tdbg"><strong>SIM Bank Name:</strong></td>
+      <td class="tdbg"><input type="input" name="simbank_tag"></td>
+    </tr>
+    <tr> 
+      <td wIdth="200" align="right" class="tdbg"><strong>Password:</strong></td>
+      <td class="tdbg"><input type="input" name="Password">*</td>
+    </tr>
+
+    <tr> 
+      <td wIdth="200" align="right" class="tdbg"><strong>Type:</strong></td>
+      <td class="tdbg"><select name="banktype" style="width:135">
+	<option value="SMB32" selected>SMB32</option>
+	<option value="SMB128">SMB128</option>
+      </select>*</td>
+    </tr>
+    <tr>
+      <td wIdth="200" align="right" class="tdbg"><strong>Group:</strong></td>
+      <td class="tdbg"><select name="team_id" style="width:135">
+        <option value="0">None(for fixed bind)</option>
+<!--
+EOT;
+
+foreach($prsdb as $prs){                                                                                          
+
+print <<<EOT
+-->
+        <option value="$prs[sim_team_id]">$prs[sim_team_name]</option>
+
+<!--
+EOT;
+}
+print <<<EOT
+-->
+      </select></td>
+    </tr>
+    <tr>
+      <td wIdth="200" align="right" class="tdbg"><strong>IMEI MODE:</strong></td>
+	<td class="tdbg"><select name="imei_mode" style="width:135">
+		<option value="0">GoIP default</option>
+		<option value="1">Random</option>
+		<option value="2">Set with Slot</option>
+		<option value="3">Random with IMSI</option>
+		<option value="4">Set from database with IMSI</option>
+	</select></td>
+    </tr>
+    <tr>
+      <td wIdth="200" align="right" class="tdbg" title="Only for 'Set with Slot'"><strong>IMEI Prefix(Auto add IMEI for each slot)</strong></td>
+      <td class="tdbg"><input type="input" name="imei_prefix" onblur="onfocus_check_integer(this, "", 999999999999)"></td>
+    </tr>
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>Limit Time of Out Call(M) of a Month:</strong></td>
+      <td class="tdbg"><input type="input" name="month_limit_time" onblur="onfocus_check_integer(this, -1, 42949672)">(Reset Day<input type="input" name="month_reset_day" style="width:30" onblur="onfocus_check_integer(this, 1, 31)">)</td>
+    </tr>
+    <tr>
+      <td wIdth="200" align="right" class="tdbg"><strong>Limit Time of Out Call(M):</strong></td>
+      <td class="tdbg"><input type="input" name="remain_time" onblur="onfocus_check_integer(this, -1, 42949672)"></td>
+    </tr>
+    <tr>
+      <td wIdth="200" align="right" class="tdbg"><strong>Time Unit of Call(S):</strong></td>
+      <td class="tdbg"><input type="input" name="time_unit" value="60" onblur="onfocus_check_integer(this, 1, 42949672)"></td>
+    </tr>
+    <tr>
+      <td wIdth="200" align="right" class="tdbg"><strong>Limit Count of Out Call:</strong></td>
+      <td class="tdbg"><input type="input" name="count_limit" onblur="onfocus_check_integer(this, -1, 42949672)"></td>
+    </tr>
+    <tr>
+      <td wIdth="200" align="right" class="tdbg"><strong>Limit Count of No Connected Out Call:</strong></td>
+      <td class="tdbg"><input type="input" name="no_connected_limit" onblur="onfocus_check_integer(this, -1, 42949672)"></td>
+    </tr>
+    <tr>
+      <td wIdth="200" align="right" class="tdbg"><strong>Warning Consecutive No Ring Call:</strong></td>
+      <td class="tdbg"><input type="input" name="no_ring_limit" value="$rs[no_ring_limit]" onblur="onfocus_check_integer(this, -1, 42949672)">For Disable<input name="no_ring_disable" type='checkbox' value="1"></td>
+    </tr>
+    <tr>
+      <td wIdth="200" align="right" class="tdbg"><strong>Warning Consecutive No Answer Call:</strong></td>
+      <td class="tdbg"><input type="input" name="no_answer_limit" value="$rs[no_answer_limit]" onblur="onfocus_check_integer(this, -1, 42949672)">For Disable<input name="no_answer_disable" type='checkbox' value="1"></td>
+    </tr>
+    <tr>
+      <td wIdth="200" align="right" class="tdbg"><strong>Warning Consecutive Short Call:</strong></td>
+      <td class="tdbg"><input type="input" name="short_call_limit" value="$rs[short_call_limit]" onblur="onfocus_check_integer(this, -1, 42949672)">For Disable<input name="short_call_disable" type='checkbox' value="1"></td>
+    </tr>
+    <tr>
+      <td wIdth="200" align="right" class="tdbg"><strong>Short Call time(S):</strong></td>
+      <td class="tdbg"><input type="input" name="short_time" value="$rs[short_time]" onblur="onfocus_check_integer(this, 1, 42949672)"></td>
+    </tr>
+
+    <tr> <td height="20" colspan="2" align="center"  class="tdbg">
+                <li>Limit=-1 or null, means no limit</li> </td></tr>
+    <tr> 
+      <td height="40" colspan="2" align="center" class="tdbg"><input name="Action" type="hIdden" Id="Action" value="Modify"> 
+        <input  type="submit" name="Submit" value="Add" style="cursor:hand;"> 
+        &nbsp; <input name="Cancel" type="button" Id="Cancel" value="Cancel" onClick="window.location.href='sim_bank.php'" style="cursor:hand;"></td>
+    </tr>
+  </table>
+</form>
+<!--
+EOT;
+}
+else if($action=="modify")
+{
+print <<<EOT
+-->
+<table width="100%" height="25"  border="0" cellpadding="0" cellspacing="0">
+  <tr class="topbg">
+    <td width="8%">&nbsp;</td>
+    <td width="92%" height="25"><strong>Current Location: Modify Sim Bank</strong></td>
+  </tr>
+</table>
+<form method="post" action="sim_bank.php?action=savemodify&name=$rs[name]" name="form1">
+  <br>
+  <table wIdth="350" border="0" align="center" cellpadding="2" cellspacing="1" class="border" >
+    <tr class="title"> 
+      <td height="22" colspan="2"> <div align="center"><strong>Modify Sim Bank</strong></div></td>
+    </tr>
+    <tr> 
+      <td wIdth="150" align="right" class="tdbg"><strong>SIM Bank ID:</strong></td>
+      <td class="tdbg">$rs[name]</td>
+    </tr>
+    <tr>
+      <td wIdth="150" align="right" class="tdbg"><strong>SIM Bank Name:</strong></td>
+      <td class="tdbg"><input type="input" name="simbank_tag" id="simbank_tag" value="$rs[tag]"></td>
+    </tr>
+    <tr> 
+      <td wIdth="150" align="right" class="tdbg"><strong>New Password:</strong></td>
+      <td class="tdbg"><input type="input" name="Password"  value="$rs[password]"> </td>
+    </tr>
+	<tr> <td height="20" colspan="2" align="center"  class="tdbg">
+               </td></tr>	
+    <tr> 
+      <td height="40" colspan="2" align="center" class="tdbg">
+        <input  type="submit" name="Submit" value="Save" style="cursor:hand;"> 
+        &nbsp; <input name="Cancel" type="button" Id="Cancel" value="Cancel" onClick="window.location.href='sim_bank.php'" style="cursor:hand;"></td>
+    </tr>
+  </table>
+</form>
+<!--
+EOT;
+}
+print <<<EOT
+-->
+<script language="JavaScript" type="text/JavaScript">
+function check_pw()
+{
+  if(document.form1.Password.value=="" && document.form1.Submit.value=="Save")
+        return true;
+  if(document.form1.Password.value=="")
+    {
+      alert("Please input password!");
+          document.form1.Password.focus();
+      return false;
+    }
+    
+  if((document.form1.Password.value)!=(document.form1.PwdConfirm.value))
+    {
+      alert("Password and Confirm Password are different!");
+          document.form1.PwdConfirm.select();
+          document.form1.PwdConfirm.focus();      
+      return false;
+    }
+}
+</script>
+</form>
+
+					  </td> 
+					</tr>
+</table>
+				
+</body>
+</html>
+<!--
+EOT;
+?>
+-->

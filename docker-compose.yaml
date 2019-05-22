@@ -1,0 +1,149 @@
+version: '2.4'
+
+networks: 
+ goipnet:
+  name: ${NETWORK_NAME}
+  driver: bridge
+  driver_opts:
+   com.docker.network.bridge.name: ${NETWORK_NAME}
+  ipam:
+   config:
+    - subnet: ${DOCKER_SUBNET}
+      gateway: ${DOCKER_GW}
+
+services:
+
+ goip:
+  depends_on:
+   - "db"
+   - "web"
+  networks:
+   goipnet:
+    ipv4_address: ${GOIP_DOCKER_LOCALNET_IP}
+  privileged: true
+  image: cr80/goip:v.0.1.1
+  container_name: ${GOIP_NAME}
+  hostname: ${GOIP_NAME}
+  env_file: 
+   - ./security/db.env
+   - ./.env
+  working_dir: /
+  restart: always
+  ports:
+   - ${GOIPCRONPORT}:${GOIPCRONPORT}/udp
+  volumes:
+   - ./distrib/script/goip_start.sh:/goip_start.sh:ro
+  # tty: true
+  # stdin_open: true
+  entrypoint: [ "/goip_start.sh"]
+  
+ smb:
+  depends_on:
+   - "db"
+   - "web"
+  networks:
+   goipnet:
+    ipv4_address: ${SMB_DOCKER_LOCALNET_IP}
+  privileged: true
+  image: cr80/goip:v.0.1.1
+  container_name: ${SMB_NAME}
+  hostname: ${SMB_NAME}
+  env_file: 
+   - ./security/db.env
+   - ./.env
+  working_dir: /
+  # restart: always
+  ports:
+   - ${SMB_XCHANGE_SMBMSVR_UDP}:${SMB_XCHANGE_SMBMSVR_UDP}/udp
+   - ${SMB_XCHANGE_PHPSVR_UDP}:${SMB_XCHANGE_PHPSVR_UDP}/udp
+   - ${SMB_SCHED_UDP1}:${SMB_SCHED_UDP1}/udp
+   - ${SMB_SCHED_UDP2}:${SMB_SCHED_UDP2}/udp
+   - ${SMB_SCHED_TCP}:${SMB_SCHED_TCP}/tcp
+  volumes:
+   - ./distrib/script/smb_start.sh:/smb_start.sh:ro
+  # tty: true
+  # stdin_open: true
+  entrypoint: [ "/smb_start.sh"]
+
+ radm:
+  networks:
+   goipnet:
+    ipv4_address: ${RADM_DOCKER_LOCALNET_IP}
+  privileged: true
+  image: cr80/goip:v.0.1.1
+  container_name: ${RADM_NAME}
+  hostname: ${RADM_NAME}
+  volumes:
+   - ./distrib/script/radm_start.sh:/radm_start.sh:ro
+  env_file: 
+   - ./.env
+   - ./security/radmin.env
+  working_dir: /
+  restart: always
+  ports:
+   - ${RADM_RADM_WEBPORT}:${RADM_RADM_WEBPORT}/tcp
+   - ${RADM_CLIPORT}:${RADM_CLIPORT}/tcp
+  # volumes:
+  #  - ./distrib/script/radm_start.sh:/radm_start.sh:ro
+  # tty: true
+  # stdin_open: true
+  entrypoint: ["/radm_start.sh"]
+
+ db:
+  env_file: 
+   - ./security/db.env
+   - ./.env
+  container_name: ${NAME_MYSQL}
+  hostname: ${NAME_MYSQL}
+  image: vsamov/mysql-5.1.73
+  volumes:
+   - ./dbdata:/var/lib/mysql
+  restart: always
+  networks:
+   goipnet:
+    ipv4_address: ${IP_MYSQL}
+  ports:
+   - ${MYSQL_EXT_PORT}:3306/tcp
+  
+ web:
+  env_file:
+   - ./.env
+   - ./security/db.env
+  networks:
+   goipnet:
+    ipv4_address: ${WWW_DOCKER_LOCALNET_IP}
+  hostname: ${WWW_NAME}
+  container_name: ${WWW_NAME}
+  restart: always
+  ports:
+   - ${WEB_EXT_PORT}:80/tcp
+  volumes:
+   - ./www:/mnt/www:ro
+   - ./distrib/script/web_start.sh:/web_start.sh:ro
+  image: athimel/apache2-php5-mysql
+  entrypoint: ["/web_start.sh"]
+
+ install:
+  depends_on:
+   - "db"
+  networks:
+   goipnet:
+    ipv4_address: ${INSTALL_IP}
+  privileged: true
+  image: cr80/goip:v.0.1.1
+  container_name: install
+  hostname: install
+  env_file: 
+   - ./security/db.env
+   - ./.env
+  volumes:
+   - ./distrib/script/smb_install.sh:/smb_install.sh:ro
+   - ./distrib/script/goip_install.sh:/goip_install.sh:ro
+   - ./distrib/sql/scheduler.sql:/scheduler.sql:ro
+   - ./distrib/sql/goip.sql:/goip.sql:ro
+   - ./www/smb_scheduler/scheduler.sql:/scheduler.sql:ro
+  # tty: true
+  # stdin_open: true
+  # entrypoint: [ "/smb_install.sh"]
+  # entrypoint: [ "/goip_install.sh"]
+  entrypoint: ["echo", "Service install disabled"]

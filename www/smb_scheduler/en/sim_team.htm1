@@ -1,0 +1,404 @@
+<!--
+<?php
+print <<<EOT
+-->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="../style.css" rel="stylesheet" type="text/css">
+<title>Group Management</title>
+<script src="../check.js"></script>
+<script language="javascript">
+//window.event.cancelBubble = true;
+//event.stopPropagation();
+
+EOT;
+if(!isset($nrcount))
+echo "var nrcount=-1;";
+else echo "var nrcount=$nrcount;";
+print <<<EOT
+
+
+function unselectall()
+	{
+	    if(document.myform.chkAll.checked){
+		document.myform.chkAll.checked = document.myform.chkAll.checked&0;
+	    } 	
+	}
+
+function CheckAll(form)
+	{
+		//alert(form);
+		var trck;
+		var e;
+		for (var i=0;i<form.elements.length;i++)
+	    {
+		    e = form.elements[i];
+		    if (e.type == 'checkbox' && e.id != "chkAll" && e.disabled==false){
+				if(nrcount>=0) {
+					if(form.chkAll.checked && !e.checked)
+						nrcount++;
+					else if(!form.chkAll.checked && e.checked)
+						nrcount--;
+				}
+				e.checked = form.chkAll.checked;
+		 		do {e=e.parentNode} while (e.tagName!="TR") 
+		 		if(form.chkAll.checked)
+		 			e.className = 'even marked';
+		 		else
+		 			e.className = 'even';
+			}
+	    }
+		td01.innerText="Now selected "+nrcount+" members.if want to save, click the button named 'Modify Members'";
+		//form.chkAll.classname = 'even';
+	}
+
+function mouseover(obj) {
+                obj.className += ' hover';
+				//alert(obj.className);
+            	
+			}
+
+function mouseout(obj) {
+            	obj.className = obj.className.replace( ' hover', '' );
+				//alert(obj.className);
+			}
+
+function trclick(obj) {
+        var checkbox = obj.getElementsByTagName( 'input' )[0];
+        //if ( checkbox && checkbox.type == 'checkbox' ) 
+        checkbox.checked ^= 1;
+		
+		if(checkbox.checked){
+			obj.className = 'even marked';	
+				
+			if(nrcount>=0) {nrcount++;document.getElementById('td01').innerHTML="Now selected "+nrcount+" members.if want to save, click the button named 'Modify Members'";} 	
+ 		}
+		else {
+			obj.className = 'even';
+			if(nrcount>=0) {nrcount--;document.getElementById('td01').innerHTML="Now selected "+nrcount+" members.if want to save, click the button named 'Modify Members'";}
+		}
+//		var ckpage=document.modifyform.elements['chkAll'+num];
+	    if(document.myform.chkAll.checked){
+		document.myform.chkAll.checked = document.myform.chkAll.checked;
+	    } 	
+		
+
+		}
+function changepage(url,fname)
+	{
+		fname.action=url;
+		fname.submit();
+		return false;	
+	}
+function selectchangepage(url,page,fname)
+	{
+
+		fname.action=url+"page="+page;
+		fname.submit();
+		return false;	
+	}
+</script>
+</head>
+<body leftmargin="2" topmargin="0" marginwIdth="0" marginheight="0">
+<table wIdth="100%" border="0" align="center" cellpadding="2" cellspacing="1" class="border">
+  <tr class="topbg"> 
+    <td height="22" colspan="2" align="center"><strong>Group Configuration</strong></td>
+  </tr>
+  <tr class="tdbg"> 
+    <td wIdth="100" height="30"><strong>Navigation:</strong></td>
+    <td height="30"><a href="sim_team.php" target=main>Group List</a>&nbsp;|&nbsp;<a href="sim_team.php?action=add" target=main>Add Group</a></td>
+  </tr>
+</table>
+<!--
+EOT;
+if($action=="recv") {
+print <<<EOT
+-->
+<table width="100%" height="25"  border="0" cellpadding="0" cellspacing="0">
+  <tr class="topbg">
+    <td width="8%">&nbsp;</td>
+    <td width="92%" height="25"><strong>Current Location: The group $groupsname had total {$rcount} members</strong></td>
+  </tr>
+  <tr class="topbg">
+    <td width="8%">&nbsp;</td>
+    <td id="td01" width="92%" height="25">Now Selected {$nrcount} member</td>
+  </tr>
+</table>
+<form action="?action=receivers&id={$id}" method=post name=myform onSubmit="return confirm('Sure to delete?')">
+<table wIdth="100%"  border="0" cellspacing="2" cellpadding="2" nowrap=true>
+	<tr class=title>
+		<td wIdth="35" align=center height="25"><b>Choice</b></td>
+		<td align="center"><b>Sim ID</b></td>
+		<td align="center"><b>Status</b></td>
+		<td align="center"><b>Group</b></td>
+		<td align="center"><b>Operation</b></td>
+	</tr>
+<!--
+EOT;
+$j=0;
+foreach($rsdb as $rs) {
+if( in_array($rs['id'],$strs0)){
+print <<<EOT
+-->
+	<tr class="marked" onMouseOver="mouseover(this)" onMouseOut="mouseout(this)" onMouseDown="trclick(this)">
+		<td align=center wIdth="35"><input name="Id{$j}" type='checkbox' onClick="return false" value="{$rs['id']}" checked></td>
+<!--
+EOT;
+}
+else{
+print <<<EOT
+-->
+	<tr class="even" onMouseOver="mouseover(this)" onMouseOut="mouseout(this)" onMouseDown="trclick(this)">
+		<td align=center wIdth="35"><input name="Id{$j}" type='checkbox' onClick="return false" value="{$rs['id']}"></td>
+<!--
+EOT;
+}
+print <<<EOT
+-->
+		<td align="center">{$rs['sim_name']}</td>
+		<td align="center">{$rs['alive']}</td>
+		<td align="center">{$rs['sim_team_name']}</td>
+		<td wIdth="145" align=center onMouseDown='event.cancelBubble = true;'><a href="sim.php?action=modify&name={$rs['sim_name']}">Sim Modify</a></td>
+    </tr>
+
+<!--
+EOT;
+$j++;
+}
+print <<<EOT
+-->
+</table>
+<input type="hIdden" name="boxs" value="{$j}">
+<input type="hIdden" name="rstr" value="{$str}">
+<table wIdth="100%"  border="0" cellspacing="2" cellpadding="2">
+
+
+					<tr>
+						<td height="30" ><input name="chkAll" type="checkbox" Id="chkAll" onclick=CheckAll(this.form) value="checkbox"> 
+					  Choice current page</td>
+					</tr>
+					<tr>
+						<td  align=center>{$fenye}</td>
+					</tr>
+					<tr><td  align=center><input name="submit11" type='submit' value='Modify members'></td></tr>
+</table>
+<!--
+EOT;
+}
+elseif($action=="grecv") {
+print <<<EOT
+-->
+<table width="100%" height="25"  border="0" cellpadding="0" cellspacing="0">
+  <tr class="topbg">
+    <td width="8%">&nbsp;</td>
+    <td width="92%" height="25"><strong>Current Location: The group $groupsname had total {$rcount} members</strong></td>
+  </tr>
+  <tr class="topbg">
+    <td width="8%">&nbsp;</td>
+    <td id="td01" width="92%" height="25">Now Selected {$nrcount} member</td>
+  </tr>
+</table>
+<form action="?action=greceivers&id={$id}" method=post name=myform onSubmit="return confirm('sure to modify?')">
+<table wIdth="100%"  border="0" cellspacing="2" cellpadding="2" nowrap=true>
+        <tr class=title>
+                <td wIdth="35" align=center height="25"><b>Choice</b></td>
+                <td align="center"><b>GoIP Line ID</b></td>
+                <td align="center"><b>Status</b></td>
+		<td align="center"><b>Area ID</b></td>
+                <td align="center"><b>Group</b></td>
+                <td align="center"><b>Operation</b></td>
+        </tr>
+<!--
+EOT;
+$j=0;
+foreach($rsdb as $rs) {
+if( in_array($rs['id'],$strs0)){
+print <<<EOT
+-->
+        <tr class="marked" onMouseOver="mouseover(this)" onMouseOut="mouseout(this)" onMouseDown="trclick(this)">
+                <td align=center wIdth="35"><input name="Id{$j}" type='checkbox' onClick="return false" value="{$rs['id']}" checked></td>
+<!--
+EOT;
+}
+else{
+print <<<EOT
+-->
+        <tr class="even" onMouseOver="mouseover(this)" onMouseOut="mouseout(this)" onMouseDown="trclick(this)">
+                <td align=center wIdth="35"><input name="Id{$j}" type='checkbox' onClick="return false" value="{$rs['id']}"></td>
+<!--
+EOT;
+}
+print <<<EOT
+-->
+                <td align="center">{$rs['line_name']}</td>
+                <td align="center">{$rs['alive']}</td>
+		<td align="center">{$rs['goip_zone']}</td>
+                <td align="center">{$rs['sim_team_name']}</td>
+                <td wIdth="145" align=center onMouseDown='event.cancelBubble = true;'><a href="device_line.php?action=modify&name={$rs['line_name']}">Goip Modify</a></td>
+    </tr>
+
+<!--
+EOT;
+$j++;
+}
+print <<<EOT
+-->
+</table>
+<input type="hIdden" name="boxs" value="{$j}">
+<input type="hIdden" name="rstr" value="{$str}">
+<table wIdth="100%"  border="0" cellspacing="2" cellpadding="2">
+
+
+                                        <tr>
+                                                <td height="30" ><input name="chkAll" type="checkbox" Id="chkAll" onclick=CheckAll(this.form) value="checkbox"> 
+                                          Choice current page</td>
+                                        </tr>
+                                        <tr>
+                                                <td  align=center>{$fenye}</td>
+                                        </tr>
+                                        <tr><td  align=center><input name="submit11" type='submit' value='Modify members'></td></tr>
+</table>
+<!--
+EOT;
+}
+elseif($action=="main") {
+print <<<EOT
+-->
+<table width="100%" height="25"  border="0" cellpadding="0" cellspacing="0">
+  <tr class="topbg">
+    <td width="8%">&nbsp;</td>
+    <td width="92%" height="25"><strong>Current Location: Groups List</strong></td>
+  </tr>
+</table>
+<form action="sim_team.php?action=del" method=post name=myform onSubmit="return confirm('Sure to delete?')">
+<table wIdth="100%"  border="0" cellspacing="2" cellpadding="2" nowrap=true>
+	<tr class=title>
+		<td wIdth="35" align=center height="25"><b>Choice</b></td>
+		<td align="center"><b>Name</b></td>
+		<td align="center"><b>Re-allocation Interval(m)</b></td>
+		<td align="center"><b>Sleep Interval(s)</b></td>
+		<td align=center><b>Operation</b></td>
+	</tr>
+<!--
+EOT;
+$j=0;
+foreach($rsdb as $rs) {
+print <<<EOT
+-->
+	<tr class="even" onMouseOver="mouseover(this)" onMouseOut="mouseout(this)" onMouseDown="trclick(this)">
+		<td align=center wIdth="35"><input name="Id{$j}" type='checkbox' onClick="return false" value="{$rs['sim_team_id']}"></td>
+		<td align="center">{$rs['sim_team_name']}</td>
+		<td align="center">{$rs['work_time']}</td>
+		<td align="center">{$rs['sleep_time']}</td>
+						
+		<td  nowrap=true align=center onMouseDown='event.cancelBubble = true;'><a href="?action=recv&id={$rs['id']}">SIM Member</a> | <a href="?action=grecv&id={$rs['id']}">GoIP Member</a> | <a href="?action=modify&id={$rs['id']}">Scheduler</a> | <a href="?id={$rs['id']}&action=del" onClick="return confirm('sure to odelete?')">Detete</a></td>
+    </tr>
+
+<!--
+EOT;
+$j++;
+}
+print <<<EOT
+-->
+</table>
+<input type="hIdden" name="boxs" value="{$j}">
+<table wIdth="100%"  border="0" cellspacing="2" cellpadding="2">
+
+
+					<tr>
+						<td height="30" ><input name="chkAll" type="checkbox" Id="chkAll" onclick=CheckAll(this.form) value="checkbox"> 
+					  Choice current page<input name="submit" type='submit' value='Delete selected'></td>
+					</tr>
+					<tr>
+						<td  align=center>{$fenye}</td>
+					</tr>
+</table>
+<!--
+EOT;
+}
+else if($action=="add")
+{
+print <<<EOT
+-->
+<table width="100%" height="25"  border="0" cellpadding="0" cellspacing="0">
+  <tr class="topbg">
+    <td width="8%">&nbsp;</td>
+    <td width="92%" height="25"><strong>Current Location: Add a Group</strong></td>
+  </tr>
+</table>
+<form method="post" action="sim_team.php?action=saveadd" name="form1" onSubmit="javascript:return check_pw();">
+  <br>
+  <br>
+  <table wIdth="300" border="0" align="center" cellpadding="2" cellspacing="1" class="border" >
+    <tr class="title"> 
+      <td height="22" colspan="2"> <div align="center"><strong>Add a Group</strong></div></td>
+    </tr>
+    <tr> 
+      <td wIdth="100" align="right" class="tdbg"><strong>Group Name:</strong></td>
+      <td class="tdbg"><input type="input" name="name"> </td>
+    </tr>
+<!--
+    <tr> 
+      <td wIdth="100" align="right" class="tdbg"><strong>备注信息:</strong></td>
+      <td class="tdbg"><input type="input" name="info"> </td>
+    </tr>
+-->
+    <tr> 
+      <td height="40" colspan="2" align="center" class="tdbg"><input name="Action" type="hIdden" Id="Action" value="Modify"> 
+        <input  type="submit" name="Submit" value="Add" style="cursor:hand;"> 
+        &nbsp; <input name="Cancel" type="button" Id="Cancel" value="Cancel" onClick="window.location.href='sim_team.php'" style="cursor:hand;"></td>
+    </tr>
+  </table>
+  </form>
+<!--
+EOT;
+}
+else if($action=="modify")
+{
+print <<<EOT
+-->
+<table width="100%" height="25"  border="0" cellpadding="0" cellspacing="0">
+  <tr class="topbg">
+    <td width="8%">&nbsp;</td>
+    <td width="92%" height="25"><strong>Current Location: Modify Scheduler of Group</strong></td>
+  </tr>
+</table>
+<form method="post" action="sim_team.php?action=savemodify" name="form1">
+  <br>
+  <br>
+  <table wIdth="400" border="0" align="center" cellpadding="2" cellspacing="1" class="border" >
+    <tr class="title"> 
+      <td height="22" colspan="2"> <div align="center"><strong>Modify Scheduler of Group</strong></div></td>
+    </tr>
+    <tr> 
+      <td wIdth="150" align="right" class="tdbg"><strong>Group Name:</strong></td>
+      <td class="tdbg">$rs[sim_team_name]</td>
+    </tr>
+    <tr>                                                                                                          
+      <td wIdth="150" align="right" class="tdbg"><strong>Re-allocation Interval(m):</strong></td>
+      <td class="tdbg"><input type="input" name="work_time" value="{$rs['work_time']}" onblur="onfocus_check_integer(this, 0, 42949672)"> </td>
+    </tr> 
+    <tr> 
+      <td wIdth="150" align="right" class="tdbg"><strong>Sleep Interval(s):</strong></td>
+      <td class="tdbg"><input type="input" name="sleep_time" value="{$rs['sleep_time']}" onblur="onfocus_check_integer(this, 0, 42949672)"> </td>
+    </tr>
+    <tr> 
+      <td height="40" colspan="2" align="center" class="tdbg"><input name="Id" type="hIdden" Id="Id" value="{$rs['sim_team_id']}"> 
+        <input  type="submit" name="Submit" value="Save" style="cursor:hand;"> 
+        &nbsp; <input name="Cancel" type="button" Id="Cancel" value="Cancel" onClick="window.location.href='sim_team.php'" style="cursor:hand;"></td>
+    </tr>
+  </table>
+  </form>
+<!--
+EOT;
+}
+print <<<EOT
+-->
+</body>
+</html>
+<!--
+EOT;
+?>
+-->
+

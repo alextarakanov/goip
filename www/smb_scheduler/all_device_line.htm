@@ -1,0 +1,482 @@
+<!--
+<?php
+print <<<EOT
+-->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="style.css?0" rel="stylesheet" type="text/css">
+<title>GoIP 线路管理</title>
+<script src="check.js"></script>
+<script language="javascript">
+EOT;
+if(!isset($nrcount))
+echo "var nrcount=-1;";
+else echo "var nrcount=$nrcount;";
+print <<<EOT
+function unselectall()
+	{
+	    if(document.myform.chkAll.checked){
+		document.myform.chkAll.checked = document.myform.chkAll.checked&0;
+	    } 	
+	}
+
+
+function CheckAll(form, obj)
+{
+        var e;
+        if(obj.id=="chkAll") document.getElementById("chkAll0").checked="";
+        if(obj.id=="chkAll0") document.getElementById("chkAll").checked="";
+
+        for (var i=0;i<form.elements.length;i++){
+                e = form.elements[i];
+                if (e.type == 'checkbox' && e.id != "chkAll" && e.id != "chkAll0" && e.disabled==false){
+                        if(nrcount>=0) {
+                                if(obj.checked && !e.checked)
+                                        nrcount++;
+                                else if(!obj.checked && e.checked)
+                                        nrcount--;
+                        }
+                        e.checked = obj.checked;
+                        do {e=e.parentNode} while (e.tagName!="TR") 
+                                if(obj.checked)
+                                        e.className = 'even marked';
+                                else
+                                        e.className = 'even';
+                }
+        }
+        if(obj.id=="chkAll0" && obj.checked){
+                td01.innerText="Now selected all GoIP channels.";
+                td02.innerText="Now selected all GoIP channels.";
+
+        }
+        else {
+                td01.innerText="Now selected "+nrcount+" GoIP channel(s).";
+                td02.innerText="Now selected "+nrcount+" GoIP channel(s).";
+        }
+}
+
+function mouseover(obj) {
+                obj.className += ' hover';
+				//alert(obj.className);
+            	
+			}
+
+function mouseout(obj) {
+            	obj.className = obj.className.replace( ' hover', '' );
+				//alert(obj.className);
+			}
+
+function trclick(obj) {
+        var checkbox = obj.getElementsByTagName( 'input' )[0];
+        //if ( checkbox && checkbox.type == 'checkbox' ) 
+        checkbox.checked ^= 1;
+
+	if(checkbox.checked){
+		obj.className = 'even marked';
+
+		if(nrcount>=0) {nrcount++;document.getElementById('td01').innerHTML="Now selected "+nrcount+" GoIP channel(s)"; document.getElementById('td02').innerHTML="Now selected "+nrcount+" GoIP channel(s)";} 
+
+	}
+	else {
+		obj.className = 'even';
+		if(nrcount>=0) {nrcount--;document.getElementById('td01').innerHTML="Now selected "+nrcount+" GoIP channel(s)";document.getElementById('td02').innerHTML="Now selected "+nrcount+" GoIP channel(s)";}
+	}
+
+
+	if(!checkbox.checked){
+		document.getElementById("chkAll0").checked="";
+		document.getElementById("chkAll").checked="";
+	}
+}
+
+function showbind(value){
+	if(value != 0) showbind1.style.display='none';
+        else showbind1.style.display='';
+}
+
+function changepage(url,fname)
+        {
+                fname.action=url;
+                fname.submit();
+                return false;
+        }
+function selectchangepage(url,page,fname)
+        {
+
+                fname.action=url+"page="+page;
+                fname.submit();
+                return false;
+        }
+
+function check_action(obj){
+        if(obj.value=="moremodify"){
+                if(confirm("Sure to modify ?")){
+                        document.myform.action="?action=moremodify&goip_name=$_REQUEST[goip_name]&group_id=$_REQUEST[group_id]&order=$order_type&order_key=$order_key";
+                        document.myform.submit();
+                }
+                //alert(document.myform.action.value);
+        }
+        if(obj.value=="reboot"){
+                if(confirm("Sure to reboot module?")){
+                        document.myform.action="?action=reboot_module&goip_name=$_REQUEST[goip_name]&group_id=$_REQUEST[group_id]&order=$order_type&order_key=$order_key";
+                        document.myform.submit();
+                }
+        }
+        else {
+        }
+}
+
+function select_location(value, name){
+        if(value=="logs"){
+                window.open("logs.php?line_name="+name, "_blank");
+        }
+        else if(value=="record"){
+                window.open("call_record.php?line_name="+name, "_blank");
+        }
+        else if(value=="cdr"){
+                window.open("cdr.php?type=line&name="+name, "_blank");
+        }
+        else if(value=="netcheck"){
+                window.open("?action=netcheck&line_name="+name+"&goip_name={$_REQUEST['goip_name']}&group_id=$_REQUEST[group_id]&order=$order_type&order_key=$order_key", "_self");
+        }
+        else if(value=="modify"){
+                if(confirm("Sure to modify ?")){
+                        window.open("?action=modify&line_name="+name+"&goip_name={$_REQUEST['goip_name']}&group_id=$_REQUEST[group_id]&order=$order_type&order_key=$order_key", "_self");
+                }
+        }
+        else if(value=="reset_all"){
+                if(confirm("Sure to enable and reset all limit ?")){
+                        window.open("?action=reset_all&line_name="+name+"&goip_name={$_REQUEST['goip_name']}&group_id=$_REQUEST[group_id]&order=$order_type&order_key=$order_key", "_self");
+                }
+        }
+        else if(value=="reboot"){
+		if(confirm("Sure to reboot module ?")){
+                	window.open("?action=reboot_module&line_name="+name+"&goip_name={$_REQUEST['goip_name']}&group_id=$_REQUEST[group_id]&order=$order_type&order_key=$order_key", "_self");
+		}
+        }
+        else {
+        }
+}
+
+
+</script>
+</head>
+<body leftmargin="2" topmargin="0" marginwIdth="0" marginheight="0">
+<table wIdth="100%" border="0" align="center" cellpadding="2" cellspacing="1" class="border">
+  <tr class="topbg"> 
+    <td height="22" colspan="2" align="center"><strong>GoIP线路管理</strong></td>
+  </tr>
+  <tr class="tdbg"> 
+    <td wIdth="100" height="30"><strong>管理导航:</strong></td>
+    <td height="30"><a href="?goip_name=$_REQUEST[goip_name]&group_id=$_REQUEST[group_id]&order=$order_type&order_key=$order_key" target=main>刷新</a>&nbsp;|&nbsp;</td>
+  </tr>
+</table>
+<!--
+EOT;
+if($action=="main") {
+$op="<td align=center><b>操作</b></td>";
+print <<<EOT
+-->
+<table width="100%" height="25"  border="0" cellpadding="0" cellspacing="0">
+  </tr>
+GoIP:
+{$goip_select}
+组:
+{$group_select}
+  </tr>
+  <tr class="topbg">
+    <td width="8%">&nbsp;</td>
+    <td id="td01" width="92%" height="25">Now choosed {$nrcount} GoIP channel(s)</td>
+  </tr>
+</table>
+<form action="goip.php?action=del" method=post name=myform onSubmit="return confirm('确认删除?')">
+<table wIdth="100%"  border="0" cellspacing="2" cellpadding="2">
+	<tr class=title>
+                <td wIdth="15" align=center height="25"><b>CH</b></td>
+		<td align="center"><a href="?goip_name=$_REQUEST[goip_name]&group_id=$_REQUEST[group_id]&order=$order_type2&order_key=line_name"><b>线路ID</b></a></td>
+		<td align="center"><a href="?goip_name=$_REQUEST[goip_name]&group_id=$_REQUEST[group_id]&order=$order_type2&order_key=line_status"><b>状态</b></a></td>
+		<td align="center"><a href="?goip_name=$_REQUEST[goip_name]&group_id=$_REQUEST[group_id]&order=$order_type2&order_key=gsm_status"><b>GSM状态</b></a></td>
+		<td align="center"><a href="?goip_name=$_REQUEST[goip_name]&group_id=$_REQUEST[group_id]&order=$order_type2&order_key=oper"><b>运营商</b></a></td>
+		<td align="center"><a href="?goip_name=$_REQUEST[goip_name]&group_id=$_REQUEST[group_id]&order=$order_type2&order_key=csq"><b>信号</b></a></td>
+		<td align="center"><a href="?goip_name=$_REQUEST[goip_name]&group_id=$_REQUEST[group_id]&order=$order_type2&order_key=call_state"><b>通话状态</b></a></td>
+		<td align="center"><a href="?goip_name=$_REQUEST[goip_name]&group_id=$_REQUEST[group_id]&order=$order_type2&order_key=sim_team_id"><b>绑定方式</b></a></td>
+		<td align="center"><a href="?goip_name=$_REQUEST[goip_name]&group_id=$_REQUEST[group_id]&order=$order_type2&order_key=goip_team_id"><b>所在组</b></a></td>
+		<td align="center"><a href="?goip_name=$_REQUEST[goip_name]&group_id=$_REQUEST[group_id]&order=$order_type2&order_key=sim_name"><b>实际SIM绑定</b></a></td>
+		<td align="center"><a href="?goip_name=$_REQUEST[goip_name]&group_id=$_REQUEST[group_id]&order=$order_type2&order_key=imei"><b>使用的IMEI</b></a></td>
+		<td align="center"><a href="?goip_name=$_REQUEST[goip_name]&group_id=$_REQUEST[group_id]&order=$order_type2&order_key=zone"><b>区域ID</b></a></td>
+		<td align="center"><a href="?goip_name=$_REQUEST[goip_name]&group_id=$_REQUEST[group_id]&order=$order_type2&order_key=zone_tag"><b>区域名称</b></a></td>
+		<td align="center"><a href="?goip_name=$_REQUEST[goip_name]&group_id=$_REQUEST[group_id]&order=$order_type2&order_key=dev_disable"><b>是否禁用</b></a></td>
+		{$op}
+	</tr>
+<!--
+EOT;
+$j=0;
+foreach($rsdb as $rs) {
+/*
+$op="<td align=center><select onChange='select_location(this.value, {$rs[line_name]})'>";
+$op.="<option value=\"operate\" selected>Operation</option>";
+$op.="<option value=\"logs\">Logs</option>";
+$op.="<option value=\"record\">Record</option>";
+$op.="<option value=\"cdr\">CDR</option>";
+$op.="<option value=\"modify\">Modify</option>";
+$op.="<option value=\"netcheck\">Net Check</option>";
+$op.="<option value=\"reboot\">Reboot</option>";
+$op.="</select></td>";
+*/
+
+//$op="<td align=center><a href=\"logs.php?line_name={$rs['line_name']}\">Logs</a> | <a href=\"call_record.php?line_name={$rs['line_name']}\">Record</a> | <a href=\"cdr.php?type=line&name={$rs['line_name']}\">CDR</a> | <a href=\"?action=netcheck&line_name={$rs['line_name']}&goip_name={$rs['goip_name']}\">Net_Check</a></td>";
+$op="<td align=center><a href=\"logs.php?line_name={$rs['line_name']}\">日志</a> | <a href=\"call_record.php?line_name={$rs['line_name']}\">通话记录</a> | <a href=\"cdr.php?type=line&name={$rs['line_name']}\">CDR</a> | <a href=\"?action=modify&line_name={$rs['line_name']}&goip_name={$_REQUEST['goip_name']}&group_id=$_REQUEST[group_id]&order=$order_type&order_key=$order_key\">修改</a> | <a href=\"?action=reboot_module&line_name={$rs['line_name']}&goip_name={$_REQUEST['goip_name']}&group_id=$_REQUEST[group_id]&order=$order_type&order_key=$order_key\" onClick=\"return confirm('确认重启模块?')\">重启模块</a> | <a href=\"?action=netcheck&line_name={$rs['line_name']}&goip_name={$_REQUEST['goip_name']}&group_id=$_REQUEST[group_id]&order=$order_type&order_key=$order_key\">网络测试</a></td>";
+
+
+if( in_array($rs['line_name'],$strs0)){
+        $class='marked';
+        $cck='checked';
+}
+else {
+        $class='even';
+        $cck='';
+}
+print <<<EOT
+-->
+	<tr class="$class"  onMouseOver="mouseover(this)" onMouseOut="mouseout(this)" onMouseDown="trclick(this)">
+                <td align=center wIdth="35"><input name="Id{$j}" type='checkbox' onClick="return false" value="{$rs['line_name']}" $cck></td>
+		<td align="center">{$rs['line_name']}</td>
+		<td align="center">{$rs['alive']}</td>
+		<td align="center">{$rs['gsm']}</td>
+		<td align="center">{$rs['oper']}</td>
+		<td align="center">{$rs['csq']}</td>
+		<td align="center">{$rs['call_state']}</td>
+		<td align="center">{$rs['bind_type']}</td>
+		<td align="center">{$rs['sim_team_name']}</td>
+		<td align="center">{$rs['sim_name']}</td>
+		<td align="center">{$rs['imei']}</td>
+		<td align="center">{$rs['zone']}</td>
+		<td align="center">{$rs['zone_tag']}</td>
+		<td align="center">{$rs['disable']}</td>
+		{$op}	
+    </tr>
+
+<!--
+EOT;
+$j++;
+}
+print <<<EOT
+-->
+</table>
+<input type="hIdden" name="boxs" value="{$j}">
+<input type="hIdden" name="rstr" value="{$str}">
+<table wIdth="100%"  border="0" cellspacing="2" cellpadding="2">
+<tr>
+<td height="30" ><input name="chkAll" type="checkbox" Id="chkAll" onclick="CheckAll(this.form, this)" value="checkbox">选择当前页 <input name="chkAll0" type="checkbox" Id="chkAll0" onclick="CheckAll(this.form, this)" value="checkbox">选择所有线路</td>
+</tr>
+
+  <tr class="topbg">
+    <td id="td02" width="100%" height="25">Now choosed {$nrcount} GoIP channel(s)</td>
+  </tr>
+<tr>
+<td>批量操作 <select name="type" id="type" style="width:80px"  onchange="check_action(this)" >
+<option value="none" selected>选择</option>
+<option value="moremodify">修改</option> 
+<option value="reboot">重启模块</option>
+</select>
+</td>
+</tr>
+
+                                        <tr>
+                                                <td  align=center>{$fenye}</td>
+                                        </tr>
+</table>
+<!--
+EOT;
+}
+else if($action=="modify")
+{
+print <<<EOT
+-->
+<table width="100%" height="25"  border="0" cellpadding="0" cellspacing="0">
+  <tr class="topbg">
+    <td width="8%">&nbsp;</td>
+    <td width="92%" height="25"><strong>当前位置：修改GoIP线路参数</strong></td>
+  </tr>
+</table>
+<form method="post" action="?action=savemodify&line_name=$rs[line_name]&goip_name={$_REQUEST['goip_name']}&order=$order_type&order_key=$order_key&group_id=$_REQUEST[group_id]" name="form1">
+  <br>
+  <table wIdth="400" border="0" align="center" cellpadding="2" cellspacing="1" class="border" >
+    <tr class="title"> 
+      <td height="22" colspan="2"> <div align="center"><strong>修改GoIP线路参数</strong></div></td>
+    </tr>
+    <tr> 
+      <td wIdth="150" align="right" class="tdbg"><strong>GoIP线路ID:</strong></td>
+      <td class="tdbg">$rs[line_name]</td>
+    </tr>
+    <tr>
+      <td wIdth="150" align="right" class="tdbg"><strong>所在组:</strong></td>
+      <td class="tdbg">
+          <select name="team_id" style="width:135" onchange="showbind(this.value)">
+	<option value="0" $select >无(启用固定绑定模式)</option>
+<!--
+EOT;
+foreach($prsdb as $prs){
+
+if($rs[goip_team_id]==$prs[sim_team_id])
+        $select=' selected';
+else                                                                                                              
+        $select='';
+print <<<EOT
+-->
+        <option value="$prs[sim_team_id]" $select >$prs[sim_team_name]</option>
+
+<!--
+EOT;
+}
+if($rs[goip_team_id]!=0) $display='none'; 
+else $display='';
+print <<<EOT
+-->
+      </select></td>
+    </tr>
+    <tr style="display:{$display}" Id='showbind1'>
+      <td wIdth="150" align="right" class="tdbg"><strong>固定绑定SIM Slot:</strong></td>
+      <td class="tdbg"><select name="sim_name" style="width:135">                                                 
+	<option value="0">无</option>
+<!--
+EOT;
+$old_plan_sim_name=0;
+foreach($grsdb as $prs){
+
+if($rs[line_name]==$prs[plan_line_name]){
+	$old_plan_sim_name=$prs[sim_name];
+        $select=' selected';
+}
+else                                                                                                              
+        $select='';
+print <<<EOT
+-->
+        <option value="$prs[sim_name]" $select >$prs[sim_name]</option>
+
+<!--
+EOT;
+}
+print <<<EOT
+-->
+
+      </select></td>                                                                                              
+    </tr>
+
+    <tr>
+      <td wIdth="150" align="right" class="tdbg"><strong>启用线路:</strong></td>
+      <td class="tdbg">
+        <select name="dev_disable">
+          <option value="0" $ck1>启用</option>
+          <option value="1" $ck2>禁用</option>
+        </select>
+      </td>
+    </tr>
+	<tr> <td height="20" colspan="2" align="center"  class="tdbg"></td></tr>	
+    <tr> 
+      <td height="40" colspan="2" align="center" class="tdbg">
+	<input name="line_name" type="hIdden" Id="line_name" value="{$rs['line_name']}">
+        <input name="old_zone" type="hIdden" Id="old_zone" value="{$rs['goip_zone']}">
+        <input name="old_plan_sim_name" type="hIdden" Id="old_plan_sim_name" value="{$old_plan_sim_name}">
+        <input name="oldname" type="hIdden" Id="oldname" value="{$rs['goip_name']}">
+        <input name="old_team_id" type="hIdden" Id="old_team_id" value="{$rs['goip_team_id']}">
+        <input name="old_disable" type="hIdden" Id="old_disable" value="{$rs['dev_disable']}">
+        <input  type="submit" name="Submit" value="保存" style="cursor:hand;"> 
+        &nbsp; <input name="Cancel" type="button" Id="Cancel" value="取消" onClick="window.location.href='?goip_name=$_REQUEST[goip_name]&group_id=$_REQUEST[group_id]&order=$order_type&order_key=$order_key'" style="cursor:hand;"></td>
+    </tr>
+  </table>
+</form>
+<!--
+EOT;
+}
+else if($action=="moremodify")
+{
+print <<<EOT
+-->
+<table width="100%" height="25"  border="0" cellpadding="0" cellspacing="0">
+  <tr class="topbg">
+    <td width="8%">&nbsp;</td>
+    <td width="92%" height="25"><strong>当前位置：修改GoIP线路参数</strong></td>
+  </tr>
+</table>
+<form method="post" action="?action=savemoremodify&goip_name=$_REQUEST[goip_name]&id=$rs[goipid]&order=$order_type&order_key=$order_key&group_id=$_REQUEST[group_id]" name="form1">
+  <br>
+  <table wIdth="600" border="0" align="center" cellpadding="2" cellspacing="1" class="border" >
+    <tr class="title"> 
+      <td height="22" colspan="2"> <div align="center"><strong>修改GoIP线路参数</strong></div></td>
+    </tr>
+    <tr> 
+      <td wIdth="200" align="right" class="tdbg"><strong>GoIP线路ID:</strong></td>
+      <td class="tdbg">$line_name</td>
+    </tr>
+    <tr>
+      <td wIdth="200" align="right" class="tdbg"><strong>所在组:</strong></td>
+      <td class="tdbg">
+          <select name="team_id" style="width:135" onchange="showbind(this.value)">
+	<option value="0" $select >无(启用固定绑定模式)</option>
+<!--
+EOT;
+foreach($prsdb as $prs){
+
+if($rs[goip_team_id]==$prs[sim_team_id])
+        $select=' selected';
+else                                                                                                              
+        $select='';
+print <<<EOT
+-->
+        <option value="$prs[sim_team_id]" $select >$prs[sim_team_name]</option>
+
+<!--
+EOT;
+}
+if($rs[goip_team_id]!=0) $display='none'; 
+else $display='';
+print <<<EOT
+-->
+      </select>&nbsp; &nbsp; |&nbsp; 修改<input name="team_id_modify" type='checkbox' value="1"></td>
+    </tr>
+
+    <tr>
+      <td wIdth="200" align="right" class="tdbg"><strong>启用线路:</strong></td>
+      <td class="tdbg">
+        <select name="dev_disable">
+          <option value="0" $ck1>启用</option>
+          <option value="1" $ck2>禁用</option>
+        </select>
+        &nbsp; &nbsp; |&nbsp; 修改<input name="dev_disable_modify" type='checkbox' value="1">
+      </td>
+    </tr>
+	<tr> <td height="20" colspan="2" align="center"  class="tdbg"></td></tr>	
+    <tr> 
+      <td height="40" colspan="2" align="center" class="tdbg">
+	<input name="line_name" type="hIdden" Id="line_name" value="{$line_name}">
+        <input name="old_zone" type="hIdden" Id="old_zone" value="{$rs['goip_zone']}">
+        <input name="old_plan_sim_name" type="hIdden" Id="old_plan_sim_name" value="{$old_plan_sim_name}">
+        <input name="oldname" type="hIdden" Id="oldname" value="{$rs['goip_name']}">
+        <input name="old_team_id" type="hIdden" Id="old_team_id" value="{$rs['goip_team_id']}">
+        <input name="old_disable" type="hIdden" Id="old_disable" value="{$rs['dev_disable']}">
+	<input name="chkAll0" type="hIdden" Id="chkAll0" value="$_REQUEST[chkAll0]">
+        <input  type="submit" name="Submit" value="确认" style="cursor:hand;"> 
+        &nbsp; <input name="Cancel" type="button" Id="Cancel" value="取消" onClick="window.location.href='?goip_name=$_REQUEST[goip_name]&group_id=$_REQUEST[group_id]&order=$order_type&order_key=$order_key'" style="cursor:hand;"></td>
+    </tr>
+  </table>
+</form>
+
+<!--
+EOT;
+}
+print <<<EOT
+-->
+</form>
+
+					  </td> 
+					</tr>
+</table>
+				
+</body>
+</html>
+<!--
+EOT;
+?>
+-->

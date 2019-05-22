@@ -1,0 +1,21 @@
+#!/bin/sh
+cd /usr/local/smb_scheduler/inc
+. ./server_type.cfg
+
+if [ "${TYPE}" != "1" ]; then
+	killall smb_scheduler >/dev/null 2>/dev/null
+	killall xchanged >/dev/null 2>/dev/null
+	sleep 0.5
+	./xchanged -f config.inc.php >/dev/null 2>/dev/null &
+	#echo "xchanged started"
+	sleep 0.5
+	./smb_scheduler -d
+	#echo "smb_scheduler started"
+else
+	killall smb_scheduler >/dev/null 2>/dev/null
+	killall xchanged >/dev/null 2>/dev/null
+	sleep 0.5
+	./xchanged -f config.inc.php >/dev/null 2>/dev/null &
+	#echo "xchanged started"
+fi
+

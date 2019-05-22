@@ -1,0 +1,748 @@
+<!--
+<?php
+print <<<EOT
+-->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="style.css?0" rel="stylesheet" type="text/css">
+<link href="sim.css" rel="stylesheet" type="text/css">
+<title>SIM Slot管理</title>
+<script src="check.js"></script>
+<script src="inc/jquery.min.js"></script>
+<script language="javascript">
+//window.event.cancelBubble = true;
+//event.stopPropagation();
+
+EOT;
+if(!isset($nrcount))
+echo "var nrcount=-1;";
+else echo "var nrcount=$nrcount;";
+print <<<EOT
+
+
+function unselectall()
+        {
+            if(document.myform.chkAll.checked){
+                document.myform.chkAll.checked = document.myform.chkAll.checked&0;
+            } 
+        }
+function CheckAll(form, obj)
+{
+	var e;
+	if(obj.id=="chkAll") document.getElementById("chkAll0").checked="";
+	if(obj.id=="chkAll0") document.getElementById("chkAll").checked="";
+
+	for (var i=0;i<form.elements.length;i++){
+		e = form.elements[i];
+		if (e.type == 'checkbox' && e.id != "chkAll" && e.id != "chkAll0" && e.disabled==false){
+			if(nrcount>=0) {
+				if(obj.checked && !e.checked)
+					nrcount++;
+				else if(!obj.checked && e.checked)
+					nrcount--;
+			}
+			e.checked = obj.checked;
+			do {e=e.parentNode} while (e.tagName!="TR") 
+				if(obj.checked)
+					e.className = 'even marked';
+				else
+					e.className = 'even';
+		}
+	}
+	if(obj.id=="chkAll0" && obj.checked){
+		td01.innerText="Now selected all SIM Slot.";
+		td02.innerText="Now selected all SIM Slot.";
+
+	}
+	else {
+		td01.innerText="Now selected "+nrcount+" SIM Slot.";
+		td02.innerText="Now selected "+nrcount+" SIM Slot.";
+	}
+}
+
+
+function mouseover(obj) {
+                obj.className += ' hover';
+                                //alert(obj.className);
+            
+                        }
+
+function mouseout(obj) {
+                obj.className = obj.className.replace( ' hover', '' );
+                                //alert(obj.className);
+                        }
+
+function trclick(obj) {
+        var checkbox = obj.getElementsByTagName( 'input' )[0];
+        //if ( checkbox && checkbox.type == 'checkbox' ) 
+        checkbox.checked ^= 1;
+
+                if(checkbox.checked){
+                        obj.className = 'even marked';
+
+                        if(nrcount>=0) {nrcount++;document.getElementById('td01').innerHTML="Now selected "+nrcount+" SIM Slot"; document.getElementById('td02').innerHTML="Now selected "+nrcount+" SIM Slot";} 
+			
+                }
+                else {
+                        obj.className = 'even';
+                        if(nrcount>=0) {nrcount--;document.getElementById('td01').innerHTML="Now selected "+nrcount+" SIM Slot";document.getElementById('td02').innerHTML="Now selected "+nrcount+" SIM Slot";}
+                }
+
+
+	if(!checkbox.checked){
+                document.getElementById("chkAll0").checked="";
+                document.getElementById("chkAll").checked="";
+        }
+}
+
+function changepage(url,fname)
+        {
+                fname.action=url;
+                fname.submit();
+                return false;
+        }
+function selectchangepage(url,page,fname)
+        {
+
+                fname.action=url+"page="+page;
+                fname.submit();
+                return false;
+        }
+
+function check_action(obj){
+        if(obj.value=="moremodify"){
+		if(confirm("确定批量修改?")){
+			document.myform.action="?action=moremodify&bank_name=$_REQUEST[bank_name]&group_id=$_REQUEST[group_id]&order=$order_type&order_key=$order_key";
+			document.myform.submit();
+		}
+                //alert(document.myform.action.value);
+        }
+        else if(obj.value=="period"){
+                if(confirm("确定批量设置时间段限制?")){
+                        document.myform.action="sim_period.php?action=modifymore&bank_name=$_REQUEST[bank_name]&group_id=$_REQUEST[group_id]&order=$order_type&order_key=$order_key";
+                        document.myform.submit();
+                }
+        }
+        else if(obj.value=="reset_limit"){
+	        if(confirm("确定重置总限制?")){
+                        document.myform.action="?action=reset_limit&bank_name=$_REQUEST[bank_name]&group_id=$_REQUEST[group_id]&order=$order_type&order_key=$order_key";
+                        document.myform.submit();
+                }
+        }
+        else if(obj.value=="reset_period"){
+	        if(confirm("确定重置时间段限制?")){
+                        document.myform.action="?action=reset_period&bank_name=$_REQUEST[bank_name]&group_id=$_REQUEST[group_id]&order=$order_type&order_key=$order_key";
+                        document.myform.submit();
+                }
+        }
+        else if(obj.value=="awaken"){
+	        if(confirm("确定唤醒线路?")){
+                        document.myform.action="?action=awaken&bank_name=$_REQUEST[bank_name]&group_id=$_REQUEST[group_id]&order=$order_type&order_key=$order_key";
+                        document.myform.submit();
+                }
+        }
+        else if(obj.value=="set_imei_db"){
+                if(confirm("确认从数据库设置IMEI?")){
+                        document.myform.action="?action=set_imei_db&bank_name=$_REQUEST[bank_name]&group_id=$_REQUEST[group_id]&order=$order_type&order_key=$order_key";
+                        document.myform.submit();
+                }
+        }
+        else {
+        }
+}
+
+function select_location(value, name){
+	if(value=="logs"){
+		window.open("logs.php?sim_name="+name, "_blank");
+	}
+	else if(value=="record"){
+		window.open("call_record.php?sim_name="+name, "_blank");
+	}
+        else if(value=="cdr"){
+		window.open("cdr.php?type=sim&name="+name, "_blank");
+        }
+        else if(value=="netcheck"){
+		window.open("?action=netcheck&sim_name="+name+"&bank_name={$_REQUEST['bank_name']}&group_id=$_REQUEST[group_id]&order=$order_type&order_key=$order_key", "_self");
+        }
+        else if(value=="modify"){
+                if(confirm("Sure to modify ?")){
+			window.open("?action=modify&sim_name="+name+"&bank_name={$_REQUEST['bank_name']}&group_id=$_REQUEST[group_id]&order=$order_type&order_key=$order_key", "_self");
+                }
+        }
+        else if(value=="period"){
+                if(confirm("Sure to modify period ?")){
+			window.open("sim_period.php?sim_name="+name+"&bank_name={$_REQUEST['bank_name']}&group_id=$_REQUEST[group_id]&order=$order_type&order_key=$order_key", "_self");
+                }
+        }
+        else if(value=="reset_limit"){
+                if(confirm("Sure to reset limit ?")){
+			window.open("?action=reset_limit&sim_name="+name+"&bank_name={$_REQUEST['bank_name']}&group_id=$_REQUEST[group_id]&order=$order_type&order_key=$order_key", "_self");
+                }
+        }
+        else if(value=="reset_period"){
+                if(confirm("Sure to reset period limit ?")){
+			window.open("?action=reset_period&sim_name="+name+"&bank_name={$_REQUEST['bank_name']}&group_id=$_REQUEST[group_id]&order=$order_type&order_key=$order_key", "_self");
+                }
+        }
+        else if(value=="reset_all"){
+                if(confirm("Sure to enable and reset all limit ?")){
+			window.open("?action=reset_all&sim_name="+name+"&bank_name={$_REQUEST['bank_name']}&group_id=$_REQUEST[group_id]&order=$order_type&order_key=$order_key", "_self");
+                }
+        }
+	else {
+	}
+}
+
+function showbind(value, show){
+	if(value != 0) document.getElementById(show).style.display='none';
+	else document.getElementById(show).style.display='';
+}  
+</script>
+</head>
+<body leftmargin="2" topmargin="0" marginwIdth="0" marginheight="0">
+<table wIdth="100%" border="0" align="center" cellpadding="2" cellspacing="1" class="border">
+  <tr class="topbg"> 
+    <td height="22" colspan="2" align="center"><strong>SIM Slot管理</strong></td>
+  </tr>
+  <tr class="tdbg"> 
+    <td wIdth="100" height="30"><strong>管理导航:</strong></td>
+    <td height="30"><a href="?bank_name=$_REQUEST[bank_name]&sim_name=$_REQUEST[sim_name]&group_id=$_REQUEST[group_id]&order=$order_type&order_key=$order_key" target=main>刷新</a>&nbsp;|&nbsp;</td>
+  </tr>
+</table>
+<!--
+EOT;
+if($action=="main") {
+$op="<td align=center><b>操作</b></td>";
+print <<<EOT
+-->
+<table width="100%" height="25"  border="0" cellpadding="0" cellspacing="0">
+  <tr class="topbg">
+<td>
+Bank:
+{$bank_select}
+组:
+{$group_select}
+</td>
+<td align="right">
+SIM信息:<input type="button" name="export" value="导出" onclick="javascript:window.location='?action=export&bank_name=$_REQUEST[bank_name]&group_id=$_REQUEST[group_id]&order=$order_type&order_key=$order_key'">
+</td>
+  </tr>
+</table>
+<table width="100%" height="25"  border="0" cellpadding="0" cellspacing="0">
+  <tr class="topbg">
+    <td width="8%">&nbsp;</td>
+    <td id="td01" width="92%" height="25">Now selected {$nrcount} SIM Slots</td>
+  </tr>
+</table>
+<form action="sim.php?action=del" method=post name=myform onSubmit="return confirm('确认删除?')">
+<table wIdth="100%"  border="0" cellspacing="2" cellpadding="2">
+	<tr class=title>
+		<td wIdth="15" align=center height="25"><b>选择</b></td>
+		<td align="center"><a href="?bank_name=$_REQUEST[bank_name]&group_id=$_REQUEST[group_id]&order=$order_type2&order_key=sim_login"><b>线路状态</b></a></td>
+		<td align="center"><a href="?bank_name=$_REQUEST[bank_name]&group_id=$_REQUEST[group_id]&order=$order_type2&order_key=sim_name"><b>Slot ID</b></a></td>
+		<td align="center"><a href="?bank_name=$_REQUEST[bank_name]&group_id=$_REQUEST[group_id]&order=$order_type2&order_key=sim_team_id"><b>绑定方式</b></a></td>
+		<td align="center"><a href="?bank_name=$_REQUEST[bank_name]&group_id=$_REQUEST[group_id]&order=$order_type2&order_key=sim_team_name"><b>所在组</b></a></td>
+		<td align="center"><a href="?bank_name=$_REQUEST[bank_name]&group_id=$_REQUEST[group_id]&order=$order_type2&order_key=plan_line_name"><b>计划绑定GoIP线路</b></a></td>
+		<td align="center"><a href="?bank_name=$_REQUEST[bank_name]&group_id=$_REQUEST[group_id]&order=$order_type2&order_key=line_name"><b>实际绑定GoIP线路</b></a></td>
+		<td align="center"><a href="?bank_name=$_REQUEST[bank_name]&group_id=$_REQUEST[group_id]&order=$order_type2&order_key=imei_mode"><b>IMEI模式</b></a></td>
+		<td align="center"><a href="?bank_name=$_REQUEST[bank_name]&group_id=$_REQUEST[group_id]&order=$order_type2&order_key=imei"><b>手设IMEI</b></a></td>
+		<td align="center"><a href="?bank_name=$_REQUEST[bank_name]&group_id=$_REQUEST[group_id]&order=$order_type2&order_key=last_imei"><b>SIM卡信息</b></a></td>
+		<td align="center"><a href="?bank_name=$_REQUEST[bank_name]&group_id=$_REQUEST[group_id]&order=$order_type2&order_key=remain_time"><b>剩余资源</b></a></td>
+		<td align="center"><a href="?bank_name=$_REQUEST[bank_name]&group_id=$_REQUEST[group_id]&order=$order_type2&order_key=no_ring_remain"><b>连续警告</b></a></td>
+		<td align="center"><a href="?bank_name=$_REQUEST[bank_name]&group_id=$_REQUEST[group_id]&order=$order_type2&order_key=time_unit"><b>计时单位(秒)</b></a></td>
+		<td align="center"><a href="?bank_name=$_REQUEST[bank_name]&group_id=$_REQUEST[group_id]&order=$order_type2&order_key=sleep"><b>是否睡眠</b></a></td>
+		<td align="center"><a href="?bank_name=$_REQUEST[bank_name]&group_id=$_REQUEST[group_id]&order=$order_type2&order_key=dev_disable"><b>是否禁用</b></a></td>
+		{$op}
+	</tr>
+<!--
+EOT;
+$j=0;
+foreach($rsdb as $rs) {
+if($rs['line_name']==0) $rs['line_name']="";
+if($rs['plan_line_name']==0) $rs['plan_line_name']="";
+
+/*
+$op="<td align=center><select onChange='select_location(this.value, {$rs[sim_name]})'>";
+$op.="<option value=\"operate\" selected>Operation</option>";
+$op.="<option value=\"logs\">Logs</option>";
+$op.="<option value=\"record\">Record</option>";
+$op.="<option value=\"cdr\">CDR</option>";
+$op.="<option value=\"modify\">Modify</option>";
+$op.="<option value=\"period\">Period</option>";
+$op.="<option value=\"reset_limit\">Reset Limit</option>";
+$op.="<option value=\"reset_period\">Reset Period</option>";
+$op.="<option value=\"netcheck\">Net Check</option>";
+$op.="</select></td>";
+*/
+
+$op="<div id=\"div_{$rs['sim_name']}\" class=\"sim_op\"><table class=\"table_op\"><tr><td colspan=\"2\" style=\"color:#ffffff; border-bottom:1px #ffffff solid; font-size:14px; font-weight:bold; padding:5px\">操作(SIM:{$rs['sim_name']})</td></tr>";
+$op.="<tr><td><a href=\"logs.php?sim_name={$rs['sim_name']}\">日志</a></td><td><a href=\"call_record.php?sim_name={$rs['sim_name']}\">通话记录</a></td></tr>";
+$op.="<tr><td><a href=\"cdr.php?type=sim&name={$rs['sim_name']}\">CDR</a></td><td><a href=\"?action=modify&sim_name={$rs['sim_name']}&bank_name={$_REQUEST['bank_name']}&group_id=$_REQUEST[group_id]&order=$order_type&order_key=$order_key\">修改</a></td></tr>";
+$op.="<tr><td><a href=\"sim_period.php?sim_name={$rs['sim_name']}&bank_name={$_REQUEST['bank_name']}&group_id=$_REQUEST[group_id]&order=$order_type&order_key=$order_key\">时段限制</a></td><td><a href=\"?action=reset_limit&sim_name=$rs[sim_name]&bank_name=$rs[bank_name]&group_id=$_REQUEST[group_id]&order=$order_type&order_key=$order_key\">重置总限制</a></td></tr>";
+$op.="<tr><td><a href=\"?action=reset_period&sim_name={$rs['sim_name']}&bank_name={$_REQUEST['bank_name']}&group_id=$_REQUEST[group_id]&order=$order_type&order_key=$order_key\">重置时段限制</a></td><td><a href=\"?action=awaken&sim_name={$rs['sim_name']}&bank_name=$rs[bank_name]&group_id=$_REQUEST[group_id]&order=$order_type&order_key=$order_key\">唤醒</a></td></tr>";
+$op.="<tr><td colspan=\"2\"><a href=\"?action=netcheck&sim_name={$rs['sim_name']}&bank_name={$_REQUEST['bank_name']}&group_id=$_REQUEST[group_id]&order=$order_type&order_key=$order_key\">网络测试</a></td></tr></table><div>";
+
+if( in_array($rs['sim_name'],$strs0)){
+	$class='marked';
+	$cck='checked';
+}
+else {
+	$class='even';
+	$cck='';
+}
+print <<<EOT
+-->
+	<tr class="$class" onMouseOver="mouseover(this)" onMouseOut="mouseout(this)" onMouseDown="trclick(this)">
+		<td align=center wIdth="35"><input name="Id{$j}" type='checkbox' onClick="return false" value="{$rs['sim_name']}" $cck></td>
+		<td align="center">{$rs['alive']}</td>
+                <td align="center">{$rs['sim_name']}</td>
+                <td align="center">{$rs['bind_type']}</td>
+                <td align="center">{$rs['sim_team_name']}</td>
+                <td align="center">{$rs['plan_line_name']}</td>
+                <td align="center">{$rs['line_name']}</td>
+		<td align="center">{$rs['imei_type_name']}</td>
+                <td align="center">{$rs['imei']}</td>
+		<td align="center" title="IMSI:{$rs['imsi']}\nICCID:{$rs['iccid']}\nIMEI:{$rs['last_imei']}">SIM Info</td>
+		<td align="center" title="{$rs['remain_limit']}">{$rs['remain_state']}</td>
+		<td align="center" title="{$rs['limit_title']}">{$rs['limit_state']}</td>
+                <td align="center">{$rs['time_unit']}</td>
+		<td align="center">{$rs['sleep']}</td>
+                <td align="center">{$rs['disable']}</td>
+		<td style="cursor:pointer; color:#003399" class="click_me" name="{$rs['sim_name']}" align="center"><a href="#"><img class="img_more" src="images/more.gif" onclick="return false"/></a>{$op}</td>
+    </tr>
+
+<!--
+EOT;
+$j++;
+}
+print <<<EOT
+-->
+</table>
+<input type="hIdden" name="boxs" value="{$j}">
+<input type="hIdden" name="rstr" value="{$str}">
+<table wIdth="100%"  border="0" cellspacing="2" cellpadding="2">
+<tr>
+<td height="30" ><input name="chkAll" type="checkbox" Id="chkAll" onclick="CheckAll(this.form, this)" value="checkbox">全选当前页  <input name="chkAll0" type="checkbox" Id="chkAll0" onclick="CheckAll(this.form, this)" value="checkbox">选择所有线路</td>
+</tr>
+  <tr class="topbg">
+    <td id="td02" width="100%" height="25">Now choosed {$nrcount} SIM Slots</td>
+  </tr>
+<tr>
+<td>批量操作 <select name="type" id="type" style="width:80px"  onchange="check_action(this)" >
+<option value="none" selected>选择</option>
+<option value="moremodify">修改</option> 
+<option value="period">时间段限制</option>
+<option value="reset_limit">重置总限制</option>
+<option value="reset_period">重置时间段限制</option>
+<option value="awaken">唤醒</option>
+<option value="set_imei_db">从数据库设置IMEI</option>
+</select>
+</td>
+</tr>
+
+					<tr>
+						<td  align=center>{$fenye}</td>
+					</tr>
+</table>
+<script>
+$(document).ready(function() {
+	$(".tr_sim:odd").css({backgroundColor:"#eeeeee"});
+});
+
+var timeout         = 0;
+var closetimer		= 0;
+var ddmenuitem      = 0;
+
+function ul1_close()
+{	if(ddmenuitem) ddmenuitem.css("display", "none");
+}
+
+function ul1_timer()
+{	closetimer = window.setTimeout(ul1_close, timeout);
+}
+
+function ul1_canceltimer()
+{	if(closetimer)
+	{	window.clearTimeout(closetimer);
+		closetimer = null;}
+}
+
+$(document).ready(function() {
+	$(".click_me").hover(function() {
+		ul1_canceltimer();
+		ul1_close();
+		var sim_name = $(this).attr("name");
+		var div_sim_name = "div_"+sim_name;
+		var offset = $(this).offset();
+		var offset_left = -165+offset.left;
+		var offset_top = 12+offset.top;
+		if ($("#"+div_sim_name).css("display") == "none") {
+			$("#"+div_sim_name).css({left:offset_left, top:offset_top});
+			ddmenuitem = $("#"+div_sim_name).css({display:"block", opacity:0.75});	
+		}
+	},function() {
+		ul1_timer();	
+	});
+	
+	
+	
+	
+	/*$(".sim_op").hover(function() {
+		$(this).css({display:"block"});	
+	},function() {
+		$(this).css({display:"none"});	
+	});*/
+	
+	
+});
+/*
+$(document).ready(function(){
+	$("#back-to-top").hide();
+	$(window).scroll(function(){
+		if ($(window).scrollTop()>230){
+			$("#back-to-top").css({display:"block", opacity:0.7});
+		}
+		else
+		{
+			$("#back-to-top").fadeOut(500);
+		}
+	});
+	$("#back-to-top").click(function(){
+		$('body,html').animate({scrollTop:0},200);
+		return false;
+	});
+});
+*/
+
+</script>
+
+<!--
+EOT;
+}
+else if($action=="modify")
+{
+print <<<EOT
+-->
+<table width="100%" height="25"  border="0" cellpadding="0" cellspacing="0">
+  <tr class="topbg">
+    <td width="8%">&nbsp;</td>
+    <td width="92%" height="25"><strong>当前位置: 修改SIM Slot</strong></td>
+  </tr>
+</table>
+<form method="post" action="all_sim.php?action=savemodify&bank_name=$_REQUEST[bank_name]&group_id=$_REQUEST[group_id]&order=$order_type&order_key=$order_key" name="form1">
+  <br>
+  <table wIdth="700" border="0" align="center" cellpadding="2" cellspacing="1" class="border" >
+    <tr class="title"> 
+      <td height="22" colspan="2"> <div align="center"><strong>修改SIM Slot配置</strong></div></td>
+    </tr>
+    <tr> 
+      <td wIdth="300" align="right" class="tdbg"><strong>SIM Slot ID:</strong></td>
+      <td class="tdbg">$rs[sim_name]</td>
+    </tr>
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>所在组:</strong></td>
+      <td class="tdbg">
+          <select name="team_id" style="width:135" onchange="showbind(this.value)">
+        <option value="0" $select >无(手动固定绑定)</option>
+<!--                                                                                                              
+EOT;
+foreach($prsdb as $prs){                                                                                          
+                                                                                                                  
+if($rs[sim_team_id]==$prs[sim_team_id])                                                                         
+        $select=' selected';                                                                                      
+else                                                                                                              
+        $select='';                                                                                               
+print <<<EOT
+-->
+        <option value="$prs[sim_team_id]" $select >$prs[sim_team_name]</option>
+
+<!--
+EOT;
+}
+if($rs[sim_team_id]!=0) $display='none'; 
+else $display='';
+if($rs[auto_reset_remain]==0) $auto_reset_display='none'; 
+else $auto_reset_display='';
+$select_auto_reset[$rs[auto_reset_remain]]=" selected";
+print <<<EOT
+-->
+      </select></td>
+    </tr>
+    <tr style="display:{$display}" Id='showbind1'>
+      <td wIdth="300" align="right" class="tdbg"><strong>计划绑定的GoIP线路:</strong></td>
+      <td class="tdbg">
+          <select name="line_name" style="width:135">
+        <option value="0">none</option>
+<!--                                                                                                              
+EOT;
+foreach($grsdb as $prs){                                                                                          
+                                                                                                                  
+if($rs[plan_line_name]==$prs[line_name])                                                                         
+        $select=' selected';                                                                                      
+else                                                                                                              
+        $select='';                                                                                               
+print <<<EOT
+-->
+        <option value="$prs[line_name]" $select >$prs[line_name]</option>
+
+<!--
+EOT;
+}
+print <<<EOT
+-->
+      </select></td>
+    </tr>
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>IMEI模式:</strong></td>
+      <td class="tdbg">
+        <select name="imei_mode">
+		<option value="0" $imei_ck1>GoIP内置IMEI</option>
+		<option value="1" $imei_ck2>随机IMEI</option>
+		<option value="2" $imei_ck3>Slot固定IMEI</option>
+		<option value="3" $imei_ck4>根据IMSI随机IMEI</option>
+		<option value="4" $imei_ck5>根据IMSI使用数据库中IMEI</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>预设IMEI(Slot固定IMEI模式):</strong></td>
+      <td class="tdbg"><input type="input" name="imei" value="$rs[imei]" onblur="onfocus_check_integer(this, 0, 999999999999999)"></td>
+    </tr>
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>每月呼叫限制时间(分钟):</strong></td>
+      <td class="tdbg"><input type="input" name="month_limit_time" value="$rs[month_limit_time]" onblur="onfocus_check_integer(this, -1, 42949672)">(每月重置日期<input type="input" name="month_reset_day" value="$rs[month_reset_day]"  style="width:30" onblur="onfocus_check_integer(this, 1, 31)">)</td>
+    </tr>
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>总呼叫限制时间(分钟):</strong></td>
+      <td class="tdbg"><input type="input" name="time_limit" value="$rs[time_limit]" onblur="onfocus_check_integer(this, -1, 42949672)"></td>
+    </tr>
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>呼叫时间计算单位(秒):</strong></td>
+      <td class="tdbg"><input type="input" name="time_unit" value="$rs[time_unit]" onblur="onfocus_check_integer(this, 1, 42949672)"></td>
+    </tr>
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>总呼出次数限制:</strong></td>
+      <td class="tdbg"><input type="input" name="count_limit" value="$rs[count_limit]" onblur="onfocus_check_integer(this, -1, 42949672)">(是否包含未接通呼叫<input name="count_limit_no_connect" type='checkbox' value="1" $ci_no_connect_ck>)</td>
+    </tr>
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>短信次数限制:</strong></td>
+      <td class="tdbg"><input type="input" name="limit_sms" value="$rs[limit_sms]" onblur="onfocus_check_integer(this, -1, 42949672)"></td>
+    </tr>
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>总限制用尽后自动重置:</strong></td>
+      <td class="tdbg">
+        <select name="auto_reset_remain" onchange="showbind(this.value-1, 'showbind2')">
+          <option value="0" $select_auto_reset[0]>关闭</option>
+          <option value="1" $select_auto_reset[1]>休息后自动重置</option>
+        </select>
+      </td>
+    </tr>
+    <tr style="display:{$auto_reset_display}" Id='showbind2'>
+      <td wIdth="300" align="right" class="tdbg"><strong>休息时间(秒):</strong></td>
+      <td class="tdbg"><input type="input" name="auto_reset_remain_s" value="$rs[auto_reset_remain_s]" onblur="onfocus_check_integer(this, 0, 42949672)"></td>
+    </tr>
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>未接通呼出次数限制:</strong></td>
+      <td class="tdbg"><input type="input" name="no_connected_limit" value="$rs[no_connected_limit]" onblur="onfocus_check_integer(this, -1, 42949672)"></td>
+    </tr>
+
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>连续呼叫无响铃警告线(次数):</strong></td>
+      <td class="tdbg"><input type="input" name="no_ring_limit" value="$rs[no_ring_limit]" onblur="onfocus_check_integer(this, -1, 42949672)">超出后禁用<input name="no_ring_disable" type='checkbox' value="1" $wa_ck1></td>
+    </tr>
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>连续呼叫无响应警告线(次数):</strong></td>
+      <td class="tdbg"><input type="input" name="no_answer_limit" value="$rs[no_answer_limit]" onblur="onfocus_check_integer(this, -1, 42949672)">超出后禁用<input name="no_answer_disable" type='checkbox' value="1" $wa_ck2></td>
+    </tr>
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>连续呼叫短通话警告线(次数):</strong></td>
+      <td class="tdbg"><input type="input" name="short_call_limit" value="$rs[short_call_limit]" onblur="onfocus_check_integer(this, -1, 42949672)">超出后禁用<input name="short_call_disable" type='checkbox' value="1" $wa_ck3></td>
+    </tr>
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>短通话时间定义(秒):</strong></td>
+      <td class="tdbg"><input type="input" name="short_time" value="$rs[short_time]" onblur="onfocus_check_integer(this, 1, 42949672)"></td>
+    </tr>
+
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>是否禁用此线路</strong></td>
+      <td class="tdbg">
+        <select name="dev_disable">
+          <option value="0" $ck1>启用</option>
+          <option value="1" $ck2>禁用</option>
+        </select>
+      </td>
+    </tr>
+    <tr> <td height="20" colspan="2" align="center"  class="tdbg">
+        限制=-1 表示没有限制。
+                </td></tr>
+    <tr> 
+      <td height="40" colspan="2" align="center" class="tdbg">
+        <input name="sim_name" type="hIdden" Id="sim_name" value="{$rs['sim_name']}">
+        <input name="oldname" type="hIdden" Id="oldname" value="{$rs['bank_name']}">
+        <input name="old_team_id" type="hIdden" Id="old_team_id" value="{$rs['sim_team_id']}">
+        <input name="old_disable" type="hIdden" Id="old_disable" value="{$rs['dev_disable']}">
+        <input  type="submit" name="Submit" value="修改" style="cursor:hand;"> 
+        &nbsp; <input name="Cancel" type="button" Id="Cancel" value="取消" onClick="window.location.href='?bank_name=$_REQUEST[bank_name]&sim_name=$_REQUEST[sim_name]&group_id=$_REQUEST[group_id]&order=$order_type&order_key=$order_key'" style="cursor:hand;">
+        &nbsp; <input name="Reset" type="button" Id="Reset" value="重置总限制" onClick="window.location.href='?action=reset_limit&sim_name=$rs[sim_name]&group_id=$_REQUEST[group_id]&order=$order_type&order_key=$order_key'" style="cursor:hand;">
+        &nbsp; <input name="Reset_Period" type="button" Id="Reset_Period" value="重置时段限制" onClick="window.location.href='?action=reset_period&sim_name=$rs[sim_name]&group_id=$_REQUEST[group_id]&order=$order_type&order_key=$order_key'" style="cursor:hand;"></td>
+    </tr>
+  </table>
+</form>
+<!--
+EOT;
+}
+else if($action=="moremodify")
+{
+print <<<EOT
+-->
+<table width="100%" height="25"  border="0" cellpadding="0" cellspacing="0">
+  <tr class="topbg">
+    <td width="8%">&nbsp;</td>
+    <td width="92%" height="25"><strong>当前位置: 修改SIM Slot</strong></td>
+  </tr>
+</table>
+<form method="post" action="all_sim.php?action=savemoremodify&bank_name=$_REQUEST[bank_name]&group_id=$_REQUEST[group_id]&order=$order_type&order_key=$order_key" name="form1" >
+  <br>
+  <table wIdth="900" border="0" align="center" cellpadding="2" cellspacing="1" class="border" >
+    <tr class="title"> 
+      <td height="22" colspan="2"> <div align="center"><strong>修改SIM Slot配置</strong></div></td>
+    </tr>
+    <tr> 
+      <td wIdth="300" align="right" class="tdbg"><strong>SIM Slot ID:</strong></td>
+      <td class="tdbg">$sim_name</td>
+    </tr>
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>所在组:</strong></td>
+      <td class="tdbg">
+          <select name="team_id" style="width:135" onchange="showbind(this.value)">
+        <option value="0" $select >无(手动固定绑定)</option>
+<!--                                                                                                              
+EOT;
+foreach($prsdb as $prs){                                                                                          
+                                                                                                                  
+if($rs[sim_team_id]==$prs[sim_team_id])                                                                         
+        $select=' selected';                                                                                      
+else                                                                                                              
+        $select='';                                                                                               
+print <<<EOT
+-->
+        <option value="$prs[sim_team_id]" $select >$prs[sim_team_name]</option>
+
+<!--
+EOT;
+}
+if($rs[sim_team_id]!=0) $display='none'; 
+else $display='';
+print <<<EOT
+-->
+      </select>&nbsp; &nbsp; |&nbsp; 修改<input name="team_id_modify" type='checkbox' value="1"></td>
+    </tr>
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>IMEI模式:</strong></td>
+      <td class="tdbg">
+        <select name="imei_mode">
+		<option value="0" $imei_ck1>GoIP内置IMEI</option>
+		<option value="1" $imei_ck2>随机IMEI</option>
+		<option value="2" $imei_ck3>Slot固定IMEI</option>
+		<option value="3" $imei_ck4>根据IMSI随机IMEI</option>
+		<option value="4" $imei_ck5>根据IMSI使用数据库中IMEI</option>
+        </select>
+	&nbsp; &nbsp; |&nbsp; 修改<input name="imei_mode_modify" type='checkbox' value="1">
+      </td>
+    </tr>
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>每月呼叫限制时间(分钟):</strong></td>
+      <td class="tdbg"><input type="input" name="month_limit_time" value="$rs[month_limit_time]" onblur="onfocus_check_integer(this, -1, 42949672)"> &nbsp; &nbsp; |&nbsp; 修改<input name="month_limit_time_modify" type='checkbox' value="1">(每月重置日期<input type="input" name="month_reset_day" value="$rs[month_reset_day]" style="width:30" onblur="onfocus_check_integer(this, 0, 31"> | 修改<input name="month_reset_day_modify" type='checkbox' value="1">)</td>
+    </tr>
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>总呼叫限制时间(分钟):</strong></td>
+      <td class="tdbg"><input type="input" name="time_limit" value="$rs[time_limit]" onblur="onfocus_check_integer(this, -1, 42949672)"> &nbsp; &nbsp; |&nbsp; 修改<input name="time_limit_modify" type='checkbox' value="1"></td>
+    </tr>
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>呼叫时间计算单位(秒):</strong></td>
+      <td class="tdbg"><input type="input" name="time_unit" value="$rs[time_unit]" onblur="onfocus_check_integer(this, 1, 42949672)">&nbsp; &nbsp; |&nbsp; 修改<input name="time_unit_modify" type='checkbox' value="1"></td>
+    </tr>
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>总呼出次数限制:</strong></td>
+      <td class="tdbg"><input type="input" name="count_limit" value="$rs[count_limit]" onblur="onfocus_check_integer(this, -1, 42949672)"> &nbsp; &nbsp; |&nbsp; 修改<input name="count_limit_modify" type='checkbox' value="1">(是否包含未接通呼叫<input name=
+"count_limit_no_connect" type='checkbox' value="1"> | 修改<input name="count_limit_no_connect_modify" type='checkbox' value="1">)</td>
+    </tr>
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>短信次数限制:</strong></td>
+      <td class="tdbg"><input type="input" name="limit_sms" value="$rs[limit_sms]" onblur="onfocus_check_integer(this, -1, 42949672)">&nbsp; &nbsp; |&nbsp; Modify<input name="limit_sms_modify" type='checkbox' value="1"></td>
+    </tr>
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>总限制用尽后自动重置:</strong></td>
+      <td class="tdbg">
+        <select name="auto_reset_remain" onchange="showbind(this.value-1, 'showbind2')">
+          <option value="0" selected>关闭</option>
+          <option value="1">休息后自动重置</option>
+        </select>
+        &nbsp; &nbsp; |&nbsp; 修改<input name="auto_reset_remain_modify" type='checkbox' value="1">
+      </td>
+    </tr>
+    <tr style="display:none" Id='showbind2'>
+      <td wIdth="300" align="right" class="tdbg"><strong>休息时间(秒):</strong></td>
+      <td class="tdbg"><input type="input" name="auto_reset_remain_s" value="60" onblur="onfocus_check_integer(this, 0, 42949672)">&nbsp; &nbsp; |&nbsp; 修改<input name="auto_reset_remain_s_modify" type='checkbox' value="1"></td>
+    </tr>
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>未接通呼出次数限制:</strong></td>
+      <td class="tdbg"><input type="input" name="no_connected_limit" value="$rs[no_connected_limit]" onblur="onfocus_check_integer(this, -1, 42949672)"> &nbsp; &nbsp; |&nbsp; 修改<input name="no_connected_limit_modify" type='checkbox' value="1"></td>
+    </tr>
+
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>连续呼叫无响铃警告线(次数):</strong></td>
+      <td class="tdbg"><input type="input" name="no_ring_limit" value="$rs[no_ring_limit]" onblur="onfocus_check_integer(this, -1, 42949672)">超出后禁用<input name="no_ring_disable" type='checkbox' value="1">&nbsp; &nbsp; |&nbsp; 修改<input name="no_ring_modify" type='checkbox' value="1"></td>
+    </tr>
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>连续呼叫无响应警告线(次数):</strong></td>
+      <td class="tdbg"><input type="input" name="no_answer_limit" value="$rs[no_answer_limit]" onblur="onfocus_check_integer(this, -1, 42949672)">超出后禁用<input name="no_answer_disable" type='checkbox' value="1">&nbsp; &nbsp; |&nbsp; 修改<input name="no_answer_modify" type='checkbox' value="1"></td>
+    </tr>
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>连续呼叫短通话警告线(次数):</strong></td>
+      <td class="tdbg"><input type="input" name="short_call_limit" value="$rs[short_call_limit]" onblur="onfocus_check_integer(this, -1, 42949672)">超出后禁用<input name="short_call_disable" type='checkbox' value="1">&nbsp; &nbsp; |&nbsp; 修改<input name="short_call_modify" type='checkbox' value="1"></td>
+    </tr>
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>短通话时间定义(秒):</strong></td>
+      <td class="tdbg"><input type="input" name="short_time" value="$rs[short_time]" onblur="onfocus_check_integer(this, 1, 42949672)">&nbsp; &nbsp; |&nbsp; 修改<input name="short_time_modify" type='checkbox' value="1"></td>
+    </tr>
+
+    <tr>
+      <td wIdth="300" align="right" class="tdbg"><strong>是否禁用此线路</strong></td>
+      <td class="tdbg">
+        <select name="dev_disable">
+          <option value="0" $ck1>启用</option>
+          <option value="1" $ck2>禁用</option>
+        </select>
+	&nbsp; &nbsp; |&nbsp; 修改<input name="dev_disable_modify" type='checkbox' value="1">
+      </td>
+    </tr>
+
+    <tr> <td height="20" colspan="2" align="center"  class="tdbg">
+	限制=-1 表示没有限制。
+	       	</td></tr>	
+    <tr> 
+      <td height="40" colspan="2" align="center" class="tdbg">
+	<input name="sim_name" type="hIdden" Id="sim_name" value="$sim_name">
+	<input name="chkAll0" type="hIdden" Id="chkAll0" value="$_REQUEST[chkAll0]">
+        <input  type="submit" name="Submit" value="确定" style="cursor:hand;"> 
+        &nbsp; <input name="Cancel" type="button" Id="Cancel" value="取消" onClick="window.location.href='all_sim.php&bank_name=$_REQUEST[bank_name]&group_id=$_REQUEST[group_id]&order=$order_type&order_key=$order_key'" style="cursor:hand;"></td>
+    </tr>
+  </table>
+<!--
+EOT;
+}
+print <<<EOT
+-->
+</form>
+					  </td> 
+					</tr>
+</table>
+				
+</body>
+</html>
+<!--
+EOT;
+?>
+-->

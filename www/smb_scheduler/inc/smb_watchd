@@ -1,0 +1,24 @@
+#! /bin/bash
+cd /usr/local/smb_scheduler/inc
+. ./server_type.cfg
+while true ; do
+	#date >> ./watch.log
+	#netstat -apn |grep 56012 |wc -l >> ./watch.log
+	if [ "${TYPE}" == "0" ]; then
+	PRO_NOW=`ps aux | grep smb_scheduler | grep -v grep | wc -l`
+	if [ $PRO_NOW -lt 1 ]; then
+		date >> ./watch.log
+		echo "smb_scheduler exit, restart." >> ./watch.log
+		../run_scheduler
+	fi
+	fi
+	sleep 30
+	PRO_NOW=`ps aux | grep xchanged | grep -v grep | wc -l`
+	if [ $PRO_NOW -lt 1 ]; then
+		date >> ./watch.log
+		echo "xchanged exit, restart." >> ./watch.log
+		../run_scheduler
+	fi
+	sleep 30
+done
+

@@ -1,0 +1,120 @@
+<!--
+<?php
+print <<<EOT
+-->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="style.css" rel="stylesheet" type="text/css">
+<title>cdr</title>
+<script src="time.js"></script>
+<script language="javascript">
+
+</script>
+</head>
+<body leftmargin="2" topmargin="0" marginwIdth="0" marginheight="0">
+<table wIdth="100%" border="0" align="center" cellpadding="2" cellspacing="1" class="border">
+  <tr class="topbg"> 
+    <td height="22" colspan="2" align="center"><strong>CDR</strong></td>
+  </tr>
+  <tr class="tdbg"> 
+    <td wIdth="100" height="30"><strong>导航:</strong></td>
+    <td height="30"><a href="?type=$type&name=$name&order=$order_type&order_key=$order_key" target=main>刷新</a>&nbsp;|&nbsp;<a href="?type=sim&start_time=$start_time&end_time=$end_time&order=$order_type&order_key=$order_key" target=main>SIM Slot CDR</a>&nbsp;|&nbsp;<a href="?type=line&start_time=$start_time&end_time=$end_time&order=$order_type&order_key=$order_key" target=main>GoIP线路CDR</a></td>
+  </tr>
+</table>
+<!--
+EOT;
+print <<<EOT
+-->
+<table width="100%" height="25"  border="0" cellpadding="0" cellspacing="0">
+  <tr class="topbg">
+    <td width="8%">&nbsp;</td>
+    <td width="92%" height="25"><strong>$mainifno</strong></td>
+  </tr>
+</table>
+<form action="cdr.php?order=$order_type&order_key=$order_key&type=$type" method="post">
+{$type}:
+{$select}
+
+开始时间:
+<input type="text" name="start_time"  readOnly onClick="SelectDate(this,'yyyy-MM-dd hh:mm')" value="{$start_time}">
+结束时间:
+<input type="text" name="end_time"  readOnly onClick="SelectDate(this,'yyyy-MM-dd hh:mm')" value="{$end_time}">
+<input type="submit" name="submit_value" value="显示">
+<input type="submit" name="submit_value" value="一小时">
+<input type="submit" name="submit_value" value="半小时">
+<input type="submit" name="submit_value" value="导出">
+</form>
+
+<table wIdth="100%"  border="0" cellspacing="2" cellpadding="2">
+	<tr class=title>
+		<td align="center"><a href="?type=$type&name=$name&start_time=$start_time&end_time=$end_time&order=$order_type2&order_key=name"><b>{$type}</b></a></td>
+                <td align="center"><a href="?type=$type&name=$name&start_time=$start_time&end_time=$end_time&order=$order_type2&order_key=asr"><b>ASR</b></a></td>
+                <td align="center"><a href="?type=$type&name=$name&start_time=$start_time&end_time=$end_time&order=$order_type2&order_key=acd"><b>ACD</b></a></td>
+                <td align="center"><a href="?type=$type&name=$name&start_time=$start_time&end_time=$end_time&order=$order_type2&order_key=calltime"><b>总通话时长</b></a></td>
+                <td align="center"><a href="?type=$type&name=$name&start_time=$start_time&end_time=$end_time&order=$order_type2&order_key=callcount"><b>总通话次数</b></a></td>
+	</tr>
+<!--
+EOT;
+if(!$name){
+print <<<EOT
+-->
+        <tr class="even2">
+                <td align="center">全部</td>
+                <td align="center">$asr</td>
+                <td align="center">$acd_s</td>
+                <td align="center">$calltime_s</td>
+                <td align="center">$callcount</td>
+    	</tr>
+<!--
+EOT;
+}
+foreach($rsdb as $key=>$rs) {
+print <<<EOT
+-->
+	<tr class="even">
+                <td align="center">{$key}</td>
+                <td align="center">{$rs[asr]}</td>
+                <td align="center">{$rs[acd_s]}</td>
+                <td align="center">{$rs[calltime_s]}</td>
+                <td align="center">{$rs[callcount]}</td>
+    </tr>
+<!--
+EOT;
+}
+if(!$name){
+print <<<EOT
+-->
+        <tr class="even2">
+                <td align="center">全部</td>
+                <td align="center">$asr</td>
+                <td align="center">$acd_s</td>
+                <td align="center">$calltime_s</td>
+                <td align="center">$callcount</td>
+        </tr>
+<!--
+EOT;
+}
+print <<<EOT
+-->
+</table>
+<table wIdth="100%"  border="0" cellspacing="2" cellpadding="2">
+
+
+                                        <tr>
+                                                <td  align=center>{$fenye}</td>
+                                        </tr>
+</table>
+
+</table>
+
+					  </td> 
+					</tr>
+</table>
+				
+</body>
+</html>
+<!--
+EOT;
+?>
+-->

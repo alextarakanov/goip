@@ -1,0 +1,19 @@
+&nbsp; Follow a Template:<select name="follow" style="width:80px" onchange=javascript:window.location='?action={$action}&id={$id}&name={$name}&follow='+this.options[this.selectedIndex].value;>
+<option value="">none</option>
+<!--
+EOT;
+foreach($template_db as $key => $rs){
+	if($rs==$_REQUEST[follow]) $s="selected";
+	else $s="";
+print <<<EOT
+-->
+<option value="{$key}" {$s}>{$rs}</option>
+<!--
+EOT;
+}
+print <<<EOT
+-->
+</select>
+      </td>
+</tr>
+

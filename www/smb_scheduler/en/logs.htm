@@ -1,0 +1,141 @@
+<!--
+<?php
+print <<<EOT
+-->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="../style.css" rel="stylesheet" type="text/css">
+<title>SIM Bank management</title>
+<script language="javascript">
+function unselectall()
+        {
+            if(document.myform.chkAll.checked){
+                document.myform.chkAll.checked = document.myform.chkAll.checked&0;
+            } 
+        }
+
+function CheckAll(form)
+        {
+                var trck;
+                var e;
+                for (var i=0;i<form.elements.length;i++)
+            {
+                    e = form.elements[i];
+                    if (e.type == 'checkbox' && e.id != "chkAll" && e.disabled==false){
+                                e.checked = form.chkAll.checked;
+                                do {e=e.parentNode} while (e.tagName!="TR") 
+                                if(form.chkAll.checked)
+                                        e.className = 'even marked';
+                                else
+                                        e.className = 'even';
+                        }
+            }
+                //form.chkAll.classname = 'even';
+        }
+
+function mouseover(obj) {
+                obj.className += ' hover';
+                                //alert(obj.className);
+            
+                        }
+
+function mouseout(obj) {
+                obj.className = obj.className.replace( ' hover', '' );
+                                //alert(obj.className);
+                        }
+
+function trclick(obj) {
+                //alert("ddddd");
+        var checkbox = obj.getElementsByTagName( 'input' )[0];
+        //if ( checkbox && checkbox.type == 'checkbox' ) 
+        checkbox.checked ^= 1;
+                if(checkbox.checked)
+                        obj.className = 'even marked';
+                else obj.className = 'even';
+//              var ckpage=document.modifyform.elements['chkAll'+num];
+            if(document.myform.chkAll.checked){
+                document.myform.chkAll.checked = document.myform.chkAll.checked&0;
+            } 
+
+
+                }
+
+</script>
+</head>
+<body leftmargin="2" topmargin="0" marginwIdth="0" marginheight="0">
+<table wIdth="100%" border="0" align="center" cellpadding="2" cellspacing="1" class="border">
+  <tr class="topbg"> 
+    <td height="22" colspan="2" align="center"><strong>Logs({$t_info})</strong></td>
+  </tr>
+  <tr class="tdbg"> 
+    <td wIdth="100" height="30"><strong>Navigation:</strong></td>
+    <td height="30"><a href="?line_name=$_GET[line_name]&sim_name=$_GET[sim_name]&team_id=$_GET[team_id]" target=main>Refresh</a>&nbsp;|&nbsp;<a href="logs.php" target=main>ALL Logs</a></td>
+  </tr>
+</table>
+<!--
+EOT;
+if($action=="main") {
+print <<<EOT
+-->
+<form action="logs.php?action=del&line_name=$_GET[line_name]&sim_name=$_GET[sim_name]" method=post name=myform onSubmit="return confirm('Sure to delete?')">
+<table wIdth="100%"  border="0" cellspacing="2" cellpadding="2">
+	<tr class=title>
+		<td wIdth="35" align=center height="25"><b>Choice</b></td>
+		<td align="center"><b>Date</b></td>
+		<td align="center"><b>Group</b></td>
+		<td align="center"><b>SIM Slot</b></td>
+		<td align="center"><b>GoIP Channel</b></td>
+		<td align="center"><b>Log</b></td>
+	</tr>
+<!--
+EOT;
+$j=0;
+foreach($rsdb as $rs) {
+print <<<EOT
+-->
+	<tr class="even" onMouseOver="mouseover(this)" onMouseOut="mouseout(this)" onMouseDown="trclick(this)">
+		<td align=center wIdth="35"><input name="Id{$j}" type='checkbox' onClick="return false" value="{$rs['id']}"></td>
+                <td align="center">{$rs['date']}</td>
+                <td align="center">{$rs['sim_team_name']}</td>
+                <td align="center">{$rs['sim_name']}</td>
+                <td align="center">{$rs['line_name']}</td>
+                <td align="center">{$rs['log']}</td>
+    </tr>
+
+<!--
+EOT;
+$j++;
+}
+print <<<EOT
+-->
+</table>
+<input type="hIdden" name="boxs" value="{$j}">
+<table wIdth="100%"  border="0" cellspacing="2" cellpadding="2">
+                                        <tr>
+                                                <td height="30" ><input name="chkAll" type="checkbox" Id="chkAll" onclick=CheckAll(this.form) value="checkbox">
+                                          Choice current page<input name="submit" type='submit' value='Delete selected'>
+        <input name="button" type='button' value='Delete All' onClick="if(confirm('Suer to delete logs?')) window.location='?action=delall'"></td>
+                                        </tr>
+
+					<tr>
+							<td  align=center>{$fenye}</td>
+						</tr>
+</table>
+<!--
+EOT;
+}
+print <<<EOT
+-->
+</form>
+
+					  </td> 
+					</tr>
+</table>
+				
+</body>
+</html>
+<!--
+EOT;
+?>
+-->

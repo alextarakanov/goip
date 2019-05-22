@@ -1,0 +1,485 @@
+Tue Aug 30 17:44:30 2011
+:main(): main.c: 127: svr start!
+Tue Aug 30 17:44:30 2011
+:db_query(): mysql.c: 64: ok:[update simbank set sim_login='0']
+
+Tue Aug 30 17:44:30 2011
+:db_query(): mysql.c: 64: ok:[update goip set line_status='0']
+
+Tue Aug 30 17:44:30 2011
+:db_query(): mysql.c: 64: ok:[update goip set gsm_status='0']
+
+Tue Aug 30 17:44:30 2011
+:db_query(): mysql.c: 64: ok:[update simbank set line_name='0' where 1]
+
+Tue Aug 30 17:44:30 2011
+:db_query(): mysql.c: 64: ok:[update system set bottom_alive=0]
+
+Tue Aug 30 17:44:31 2011
+:db_query(): mysql.c: 64: ok:[update simbank set sim_login='0']
+
+Tue Aug 30 17:44:31 2011
+:db_query(): mysql.c: 64: ok:[update goip set line_status='0']
+
+Tue Aug 30 17:44:31 2011
+:db_query(): mysql.c: 64: ok:[update goip set gsm_status='0']
+
+Tue Aug 30 17:44:31 2011
+:db_query(): mysql.c: 64: ok:[update simbank set line_name='0' where 1]
+
+Tue Aug 30 17:44:31 2011
+:db_query(): mysql.c: 64: ok:[update system set bottom_alive=1]
+
+Tue Aug 30 17:44:31 2011
+:db_query_store_result(): mysql.c: 99: ok:[select 1 as type,sim_name,sim_team_id,bank_pass,0 from simbank order by sim_name]
+
+Tue Aug 30 17:44:31 2011
+:db_query_store_result(): mysql.c: 99: ok:[select 2 as type,line_name,goip_team_id,goip_pass,goip_zone from goip order by line_name]
+
+Tue Aug 30 17:44:31 2011
+:db_query_store_result(): mysql.c: 99: ok:[select 3 as type,sim_team_id,work_time,sleep_time from sim_team order by sim_team_id]
+
+Tue Aug 30 17:44:31 2011
+:db_query(): mysql.c: 64: ok:[update simbank set sim_login='11' where sim_name='12324']
+
+Tue Aug 30 17:44:48 2011
+:db_query(): mysql.c: 64: ok:[update simbank set sim_login='11' where sim_name='12303']
+
+Tue Aug 30 17:44:58 2011
+:db_query(): mysql.c: 64: ok:[update simbank set sim_login='11' where sim_name='12301']
+
+Tue Aug 30 17:44:58 2011
+:db_query(): mysql.c: 64: ok:[update simbank set sim_login='11' where sim_name='12302']
+
+Tue Aug 30 17:49:17 2011
+:main(): main.c: 127: svr start!
+Tue Aug 30 17:49:17 2011
+:db_query(): mysql.c: 64: ok:[update simbank set sim_login='0']
+
+Tue Aug 30 17:49:17 2011
+:db_query(): mysql.c: 64: ok:[update goip set line_status='0']
+
+Tue Aug 30 17:49:17 2011
+:db_query(): mysql.c: 64: ok:[update goip set gsm_status='0']
+
+Tue Aug 30 17:49:17 2011
+:db_query(): mysql.c: 64: ok:[update simbank set line_name='0' where 1]
+
+Tue Aug 30 17:49:17 2011
+:db_query(): mysql.c: 64: ok:[update system set bottom_alive=0]
+
+Tue Aug 30 17:49:17 2011
+:db_query(): mysql.c: 64: ok:[update simbank set sim_login='0']
+
+Tue Aug 30 17:49:17 2011
+:db_query(): mysql.c: 64: ok:[update goip set line_status='0']
+
+Tue Aug 30 17:49:17 2011
+:db_query(): mysql.c: 64: ok:[update goip set gsm_status='0']
+
+Tue Aug 30 17:49:17 2011
+:db_query(): mysql.c: 64: ok:[update simbank set line_name='0' where 1]
+
+Tue Aug 30 17:49:17 2011
+:db_query(): mysql.c: 64: ok:[update system set bottom_alive=1]
+
+Tue Aug 30 17:49:17 2011
+:db_query_store_result(): mysql.c: 99: ok:[select 1 as type,sim_name,sim_team_id,bank_pass,0 from simbank order by sim_name]
+
+Tue Aug 30 17:49:17 2011
+:db_query_store_result(): mysql.c: 99: ok:[select 2 as type,line_name,goip_team_id,goip_pass,goip_zone from goip order by line_name]
+
+Tue Aug 30 17:49:17 2011
+:db_query_store_result(): mysql.c: 99: ok:[select 3 as type,sim_team_id,work_time,sleep_time from sim_team order by sim_team_id]
+
+Tue Aug 30 17:49:18 2011
+:db_query(): mysql.c: 64: ok:[update simbank set sim_login='11' where sim_name='12303']
+
+Tue Aug 30 17:49:28 2011
+:db_query(): mysql.c: 64: ok:[update simbank set sim_login='11' where sim_name='12301']
+
+Tue Aug 30 17:49:28 2011
+:db_query(): mysql.c: 64: ok:[update simbank set sim_login='11' where sim_name='12302']
+
+Tue Aug 30 17:49:31 2011
+:db_query(): mysql.c: 64: ok:[update simbank set sim_login='11' where sim_name='12324']
+
+Tue Aug 30 17:53:10 2011
+:main(): main.c: 127: svr start!
+Tue Aug 30 17:53:10 2011
+:db_query(): mysql.c: 64: ok:[update simbank set sim_login='0']
+
+Tue Aug 30 17:53:10 2011
+:db_query(): mysql.c: 64: ok:[update goip set line_status='0']
+
+Tue Aug 30 17:53:10 2011
+:db_query(): mysql.c: 64: ok:[update goip set gsm_status='0']
+
+Tue Aug 30 17:53:10 2011
+:db_query(): mysql.c: 64: ok:[update simbank set line_name='0' where 1]
+
+Tue Aug 30 17:53:10 2011
+:db_query(): mysql.c: 64: ok:[update system set bottom_alive=0]
+
+Tue Aug 30 17:53:10 2011
+:db_query(): mysql.c: 64: ok:[update simbank set sim_login='0']
+
+Tue Aug 30 17:53:10 2011
+:db_query(): mysql.c: 64: ok:[update goip set line_status='0']
+
+Tue Aug 30 17:53:10 2011
+:db_query(): mysql.c: 64: ok:[update goip set gsm_status='0']
+
+Tue Aug 30 17:53:10 2011
+:db_query(): mysql.c: 64: ok:[update simbank set line_name='0' where 1]
+
+Tue Aug 30 17:53:10 2011
+:db_query(): mysql.c: 64: ok:[update system set bottom_alive=1]
+
+Tue Aug 30 17:53:10 2011
+:db_query_store_result(): mysql.c: 99: ok:[select 1 as type,sim_name,sim_team_id,bank_pass,0 from simbank order by sim_name]
+
+Tue Aug 30 17:53:10 2011
+:db_query_store_result(): mysql.c: 99: ok:[select 2 as type,line_name,goip_team_id,goip_pass,goip_zone from goip order by line_name]
+
+Tue Aug 30 17:53:10 2011
+:db_query_store_result(): mysql.c: 99: ok:[select 3 as type,sim_team_id,work_time,sleep_time from sim_team order by sim_team_id]
+
+Tue Aug 30 17:53:18 2011
+:db_query(): mysql.c: 64: ok:[update simbank set sim_login='11' where sim_name='12303']
+
+Tue Aug 30 17:53:28 2011
+:db_query(): mysql.c: 64: ok:[update simbank set sim_login='11' where sim_name='12301']
+
+Tue Aug 30 17:53:28 2011
+:db_query(): mysql.c: 64: ok:[update simbank set sim_login='11' where sim_name='12302']
+
+Tue Aug 30 17:53:31 2011
+:db_query(): mysql.c: 64: ok:[update simbank set sim_login='11' where sim_name='12324']
+
+Wed Aug 31 09:55:32 2011
+:db_query(): mysql.c: 64: ok:[update simbank set sim_login='11' where sim_name='12304']
+
+Wed Aug 31 09:55:32 2011
+:db_query(): mysql.c: 64: ok:[update simbank set sim_login='11' where sim_name='12305']
+
+Wed Aug 31 09:55:32 2011
+:db_query(): mysql.c: 64: ok:[update simbank set sim_login='11' where sim_name='12306']
+
+Wed Aug 31 09:55:32 2011
+:db_query(): mysql.c: 64: ok:[update simbank set sim_login='11' where sim_name='12307']
+
+Wed Aug 31 09:58:07 2011
+:db_query(): mysql.c: 64: ok:[update simbank set sim_login='12' where sim_name='12301']
+
+Wed Aug 31 09:58:07 2011
+:db_query(): mysql.c: 64: ok:[update simbank set line_name='0' where sim_name='12301']
+
+Wed Aug 31 09:58:07 2011
+:db_query(): mysql.c: 64: ok:[update simbank set sim_login='12' where sim_name='12302']
+
+Wed Aug 31 09:58:07 2011
+:db_query(): mysql.c: 64: ok:[update simbank set line_name='0' where sim_name='12302']
+
+Wed Aug 31 09:58:07 2011
+:db_query(): mysql.c: 64: ok:[update simbank set sim_login='12' where sim_name='12303']
+
+Wed Aug 31 09:58:07 2011
+:db_query(): mysql.c: 64: ok:[update simbank set line_name='0' where sim_name='12303']
+
+Wed Aug 31 09:58:07 2011
+:db_query(): mysql.c: 64: ok:[update simbank set sim_login='12' where sim_name='12304']
+
+Wed Aug 31 09:58:07 2011
+:db_query(): mysql.c: 64: ok:[update simbank set line_name='0' where sim_name='12304']
+
+Wed Aug 31 09:58:07 2011
+:db_query(): mysql.c: 64: ok:[update simbank set sim_login='12' where sim_name='12305']
+
+Wed Aug 31 09:58:07 2011
+:db_query(): mysql.c: 64: ok:[update simbank set line_name='0' where sim_name='12305']
+
+Wed Aug 31 09:58:07 2011
+:db_query(): mysql.c: 64: ok:[update simbank set sim_login='12' where sim_name='12306']
+
+Wed Aug 31 09:58:07 2011
+:db_query(): mysql.c: 64: ok:[update simbank set line_name='0' where sim_name='12306']
+
+Wed Aug 31 09:58:07 2011
+:db_query(): mysql.c: 64: ok:[update simbank set sim_login='12' where sim_name='12307']
+
+Wed Aug 31 09:58:07 2011
+:db_query(): mysql.c: 64: ok:[update simbank set line_name='0' where sim_name='12307']
+
+Wed Aug 31 09:58:07 2011
+:db_query(): mysql.c: 64: ok:[update simbank set sim_login='12' where sim_name='12324']
+
+Wed Aug 31 09:58:07 2011
+:db_query(): mysql.c: 64: ok:[update simbank set line_name='0' where sim_name='12324']
+
+Wed Aug 31 10:14:13 2011
+:db_query(): mysql.c: 64: ok:[update simbank set sim_login='0']
+
+Wed Aug 31 10:14:13 2011
+:db_query(): mysql.c: 64: ok:[update goip set line_status='0']
+
+Wed Aug 31 10:14:13 2011
+:db_query(): mysql.c: 64: ok:[update goip set gsm_status='0']
+
+Wed Aug 31 10:14:13 2011
+:db_query(): mysql.c: 64: ok:[update simbank set line_name='0' where 1]
+
+Wed Aug 31 10:14:13 2011
+:db_query(): mysql.c: 64: ok:[update system set bottom_alive=1]
+
+Wed Aug 31 10:14:13 2011
+:db_query_store_result(): mysql.c: 99: ok:[select 1 as type,sim_name,sim_team_id,bank_pass,0 from simbank order by sim_name]
+
+Wed Aug 31 10:14:13 2011
+:db_query_store_result(): mysql.c: 99: ok:[select 2 as type,line_name,goip_team_id,goip_pass,goip_zone from goip order by line_name]
+
+Wed Aug 31 10:14:13 2011
+:db_query_store_result(): mysql.c: 99: ok:[select 3 as type,sim_team_id,work_time,sleep_time from sim_team order by sim_team_id]
+
+Fri Sep  2 09:25:17 2011
+:main(): main.c: 127: svr start!
+Fri Sep  2 09:25:18 2011
+:db_query(): mysql.c: 64: ok:[update simbank set sim_login='0']
+
+Fri Sep  2 09:25:18 2011
+:db_query(): mysql.c: 64: ok:[update goip set line_status='0']
+
+Fri Sep  2 09:25:18 2011
+:db_query(): mysql.c: 64: ok:[update goip set gsm_status='0']
+
+Fri Sep  2 09:25:18 2011
+:db_query(): mysql.c: 64: ok:[update simbank set line_name='0' where 1]
+
+Fri Sep  2 09:25:18 2011
+:db_query(): mysql.c: 64: ok:[update system set bottom_alive=0]
+
+Fri Sep  2 09:25:18 2011
+:db_query(): mysql.c: 64: ok:[update simbank set sim_login='0']
+
+Fri Sep  2 09:25:18 2011
+:db_query(): mysql.c: 64: ok:[update goip set line_status='0']
+
+Fri Sep  2 09:25:18 2011
+:db_query(): mysql.c: 64: ok:[update goip set gsm_status='0']
+
+Fri Sep  2 09:25:18 2011
+:db_query(): mysql.c: 64: ok:[update simbank set line_name='0' where 1]
+
+Fri Sep  2 09:25:18 2011
+:db_query(): mysql.c: 64: ok:[update system set bottom_alive=1]
+
+Fri Sep  2 09:25:18 2011
+:db_query_store_result(): mysql.c: 99: ok:[select 1 as type,sim_name,sim_team_id,bank_pass,0 from simbank order by sim_name]
+
+Fri Sep  2 09:25:18 2011
+:db_query_store_result(): mysql.c: 99: ok:[select 2 as type,line_name,goip_team_id,goip_pass,goip_zone from goip order by line_name]
+
+Fri Sep  2 09:25:18 2011
+:db_query_store_result(): mysql.c: 99: ok:[select 3 as type,sim_team_id,work_time,sleep_time,imei_random from sim_team order by sim_team_id]
+
+Fri Sep  2 09:25:25 2011
+:db_query(): mysql.c: 64: ok:[update goip set line_status='11' where line_name='80001']
+
+Fri Sep  2 09:25:26 2011
+:db_query(): mysql.c: 64: ok:[update goip set line_status='11' where line_name='80002']
+
+Fri Sep  2 09:25:26 2011
+:db_query(): mysql.c: 64: ok:[update goip set line_status='11' where line_name='80003']
+
+Fri Sep  2 09:25:26 2011
+:db_query(): mysql.c: 64: ok:[update goip set line_status='11' where line_name='80004']
+
+Fri Sep  2 17:33:28 2011
+:main(): main.c: 127: svr start!
+Fri Sep  2 17:33:28 2011
+:db_query(): mysql.c: 64: ok:[update simbank set sim_login='0']
+
+Fri Sep  2 17:33:28 2011
+:db_query(): mysql.c: 64: ok:[update goip set line_status='0']
+
+Fri Sep  2 17:33:28 2011
+:db_query(): mysql.c: 64: ok:[update goip set gsm_status='0']
+
+Fri Sep  2 17:33:28 2011
+:db_query(): mysql.c: 64: ok:[update simbank set line_name='0' where 1]
+
+Fri Sep  2 17:33:28 2011
+:db_query(): mysql.c: 64: ok:[update system set bottom_alive=0]
+
+Fri Sep  2 17:33:28 2011
+:db_query(): mysql.c: 64: ok:[update simbank set sim_login='0']
+
+Fri Sep  2 17:33:28 2011
+:db_query(): mysql.c: 64: ok:[update goip set line_status='0']
+
+Fri Sep  2 17:33:28 2011
+:db_query(): mysql.c: 64: ok:[update goip set gsm_status='0']
+
+Fri Sep  2 17:33:28 2011
+:db_query(): mysql.c: 64: ok:[update simbank set line_name='0' where 1]
+
+Fri Sep  2 17:33:28 2011
+:db_query(): mysql.c: 64: ok:[update system set bottom_alive=1]
+
+Fri Sep  2 17:33:28 2011
+:db_query_store_result(): mysql.c: 99: ok:[select 1 as type,sim_name,sim_team_id,bank_pass,0 from simbank order by sim_name]
+
+Fri Sep  2 17:33:28 2011
+:db_query_store_result(): mysql.c: 99: ok:[select 2 as type,line_name,goip_team_id,goip_pass,goip_zone from goip order by line_name]
+
+Fri Sep  2 17:33:28 2011
+:db_query_store_result(): mysql.c: 99: ok:[select 3 as type,sim_team_id,work_time,sleep_time,imei_random from sim_team order by sim_team_id]
+
+Fri Sep  2 17:33:30 2011
+:db_query(): mysql.c: 64: ok:[update simbank set sim_login='0']
+
+Fri Sep  2 17:33:30 2011
+:db_query(): mysql.c: 64: ok:[update goip set line_status='0']
+
+Fri Sep  2 17:33:30 2011
+:db_query(): mysql.c: 64: ok:[update goip set gsm_status='0']
+
+Fri Sep  2 17:33:30 2011
+:db_query(): mysql.c: 64: ok:[update simbank set line_name='0' where 1]
+
+Fri Sep  2 17:33:30 2011
+:db_query(): mysql.c: 64: ok:[update system set bottom_alive=1]
+
+Fri Sep  2 17:33:30 2011
+:db_query_store_result(): mysql.c: 99: ok:[select 1 as type,sim_name,sim_team_id,bank_pass,0 from simbank order by sim_name]
+
+Fri Sep  2 17:33:30 2011
+:db_query_store_result(): mysql.c: 99: ok:[select 2 as type,line_name,goip_team_id,goip_pass,goip_zone from goip order by line_name]
+
+Fri Sep  2 17:33:30 2011
+:db_query_store_result(): mysql.c: 99: ok:[select 3 as type,sim_team_id,work_time,sleep_time,imei_random from sim_team order by sim_team_id]
+
+Fri Sep  2 17:33:33 2011
+:db_query(): mysql.c: 64: ok:[update simbank set sim_login='0']
+
+Fri Sep  2 17:33:33 2011
+:db_query(): mysql.c: 64: ok:[update goip set line_status='0']
+
+Fri Sep  2 17:33:33 2011
+:db_query(): mysql.c: 64: ok:[update goip set gsm_status='0']
+
+Fri Sep  2 17:33:33 2011
+:db_query(): mysql.c: 64: ok:[update simbank set line_name='0' where 1]
+
+Fri Sep  2 17:33:33 2011
+:db_query(): mysql.c: 64: ok:[update system set bottom_alive=1]
+
+Fri Sep  2 17:33:33 2011
+:db_query_store_result(): mysql.c: 99: ok:[select 1 as type,sim_name,sim_team_id,bank_pass,0 from simbank order by sim_name]
+
+Fri Sep  2 17:33:33 2011
+:db_query_store_result(): mysql.c: 99: ok:[select 2 as type,line_name,goip_team_id,goip_pass,goip_zone from goip order by line_name]
+
+Fri Sep  2 17:33:33 2011
+:db_query_store_result(): mysql.c: 99: ok:[select 3 as type,sim_team_id,work_time,sleep_time,imei_random from sim_team order by sim_team_id]
+
+Mon Sep  5 09:48:05 2011
+:main(): main.c: 127: svr start!
+Mon Sep  5 09:48:05 2011
+:db_query(): mysql.c: 64: ok:[update simbank set sim_login='0']
+
+Mon Sep  5 09:48:05 2011
+:db_query(): mysql.c: 64: ok:[update goip set line_status='0']
+
+Mon Sep  5 09:48:05 2011
+:db_query(): mysql.c: 64: ok:[update goip set gsm_status='0']
+
+Mon Sep  5 09:48:05 2011
+:db_query(): mysql.c: 64: ok:[update simbank set line_name='0' where 1]
+
+Mon Sep  5 09:48:05 2011
+:db_query(): mysql.c: 64: ok:[update system set bottom_alive=0]
+
+Mon Sep  5 09:48:05 2011
+:db_query(): mysql.c: 64: ok:[update simbank set sim_login='0']
+
+Mon Sep  5 09:48:05 2011
+:db_query(): mysql.c: 64: ok:[update goip set line_status='0']
+
+Mon Sep  5 09:48:05 2011
+:db_query(): mysql.c: 64: ok:[update goip set gsm_status='0']
+
+Mon Sep  5 09:48:05 2011
+:db_query(): mysql.c: 64: ok:[update simbank set line_name='0' where 1]
+
+Mon Sep  5 09:48:05 2011
+:db_query(): mysql.c: 64: ok:[update system set bottom_alive=1]
+
+Mon Sep  5 09:48:05 2011
+:db_query_store_result(): mysql.c: 99: ok:[select 1 as type,sim_name,sim_team_id,bank_pass,0 from simbank order by sim_name]
+
+Mon Sep  5 09:48:05 2011
+:db_query_store_result(): mysql.c: 99: ok:[select 4 as type,sim_name,dev_disable from simbank order by sim_name]
+
+Mon Sep  5 09:48:06 2011
+:db_query_store_result(): mysql.c: 99: ok:[select 2 as type,line_name,goip_team_id,goip_pass,goip_zone from goip order by line_name]
+
+Mon Sep  5 09:48:06 2011
+:db_query_store_result(): mysql.c: 99: ok:[select 5 as type,line_name,dev_disable from goip order by line_name]
+
+Mon Sep  5 09:48:07 2011
+:db_query_store_result(): mysql.c: 99: ok:[select 3 as type,sim_team_id,work_time,sleep_time,imei_random from sim_team order by sim_team_id]
+
+Mon Sep  5 09:48:07 2011
+:db_query_store_result(): mysql.c: 99: ok:[select 6 as type,sim_name,plan_line_name from simbank where sim_team_id='0' order by sim_name]
+
+Mon Sep  5 10:05:23 2011
+:main(): main.c: 127: svr start!
+Mon Sep  5 10:05:23 2011
+:db_query(): mysql.c: 64: ok:[update simbank set sim_login='0']
+
+Mon Sep  5 10:05:23 2011
+:db_query(): mysql.c: 64: ok:[update goip set line_status='0']
+
+Mon Sep  5 10:05:23 2011
+:db_query(): mysql.c: 64: ok:[update goip set gsm_status='0']
+
+Mon Sep  5 10:05:23 2011
+:db_query(): mysql.c: 64: ok:[update simbank set line_name='0' where 1]
+
+Mon Sep  5 10:05:23 2011
+:db_query(): mysql.c: 64: ok:[update system set bottom_alive=0]
+
+Mon Sep  5 10:05:24 2011
+:db_query(): mysql.c: 64: ok:[update simbank set sim_login='0']
+
+Mon Sep  5 10:05:24 2011
+:db_query(): mysql.c: 64: ok:[update goip set line_status='0']
+
+Mon Sep  5 10:05:24 2011
+:db_query(): mysql.c: 64: ok:[update goip set gsm_status='0']
+
+Mon Sep  5 10:05:24 2011
+:db_query(): mysql.c: 64: ok:[update simbank set line_name='0' where 1]
+
+Mon Sep  5 10:05:24 2011
+:db_query(): mysql.c: 64: ok:[update system set bottom_alive=1]
+
+Mon Sep  5 10:05:24 2011
+:db_query_store_result(): mysql.c: 99: ok:[select 1 as type,sim_name,sim_team_id,bank_pass,0 from simbank order by sim_name]
+
+Mon Sep  5 10:05:24 2011
+:db_query_store_result(): mysql.c: 99: ok:[select 4 as type,sim_name,dev_disable from simbank order by sim_name]
+
+Mon Sep  5 10:05:24 2011
+:db_query_store_result(): mysql.c: 99: ok:[select 2 as type,line_name,goip_team_id,goip_pass,goip_zone from goip order by line_name]
+
+Mon Sep  5 10:05:24 2011
+:db_query_store_result(): mysql.c: 99: ok:[select 5 as type,line_name,dev_disable from goip order by line_name]
+
+Mon Sep  5 10:05:24 2011
+:db_query_store_result(): mysql.c: 99: ok:[select 3 as type,sim_team_id,work_time,sleep_time,imei_random from sim_team order by sim_team_id]
+
+Mon Sep  5 10:05:24 2011
+:db_query_store_result(): mysql.c: 99: ok:[select 6 as type,sim_name,plan_line_name from simbank where sim_team_id='0' order by sim_name]
+

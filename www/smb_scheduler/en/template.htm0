@@ -1,0 +1,321 @@
+<!--
+<?php
+print <<<EOT
+-->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="../style.css" rel="stylesheet" type="text/css">
+<title>Group Scheduler Template</title>
+<script src="../dynamic.bin" lang="javascript"></script>
+<script src="../check.js"></script>
+<script language="javascript">
+function show_type_div(value){
+	if(value=='cycle'){
+		type_cycle_div.style.display="";
+		type_period_div.style.display="none";
+	}
+	else {
+		type_cycle_div.style.display="none";
+		type_period_div.style.display="";
+	}
+
+}
+
+var str = "";
+document.writeln("<div id=\"_contents\" style=\"padding:6px; background-color:#E3E3E3; font-size: 12px; border: 1px solid #777777;  position:absolute; left:?px; top:?px; width:?px; height:?px; z-index:1; visibility:hidden\">");
+str += "<select name=\"_hour\" >";
+for (h = 0; h <= 9; h++) {
+    str += "<option value=\"0" + h + "\">0" + h + "</option>";
+}
+for (h = 10; h <= 23; h++) {
+    str += "<option value=\"" + h + "\">" + h + "</option>";
+}
+str += "</select>H";
+str += "<select name=\"_min\" >";
+for (h = 0; h <=9 ; h++) {
+    str += "<option value=\"0" + h + "\">0" + h + "</option>";
+}
+for (h = 10; h <= 59; h++) {
+    str += "<option value=\"" + h + "\">" + h + "</option>";
+}
+str += "</select>M";
+str += "</select> <input id=\"queding\" name=\"queding\" type=\"button\" onclick=\"_select()\" value=\"OK\" style=\"font-size:12px\" /></div>";
+document.writeln(str);
+var _fieldname;
+function _SetSelect(name,s_min,s_sec,e_min,e_sec){
+	
+}
+
+function _SetTime(tt) {
+    //alert(tt.id);
+    _fieldname = tt;
+
+    document.getElementById('queding').onclick=function(){
+	//_select(tt.id);
+	//alert(_fieldname.id);
+	_fieldname.value=document.all._hour.value + ":" + document.all._min.value;
+	document.getElementById('_contents').style.visibility = "hidden";
+    };
+
+    //_fieldname = tt;
+    var ttop = tt.offsetTop;    //TT控件的定位点高
+    var thei = tt.clientHeight;    //TT控件本身的高
+    var tleft = tt.offsetLeft;    //TT控件的定位点宽
+    while (tt = tt.offsetParent) {
+        ttop += tt.offsetTop;
+        tleft += tt.offsetLeft;
+    }
+    document.all._contents.style.top = ttop + thei + 4;
+    document.all._contents.style.left = tleft;
+    document.all._contents.style.visibility = "visible";
+}
+/*
+function _select(pid) {
+   //alert('121313');
+    //alert(pid);
+    //document.getElementById('period_start1').onclick="document.getElementById('_contents').style.visibility = 'hidden';";
+    //document.getElementById(pid).value = document.all._hour.value + ":" + document.all._min.value;
+    document.getElementById('_contents').style.visibility = "hidden";
+}
+*/
+function a()
+{
+	//alert("2222222");
+	//document.getElementById('start_h1').value="alert('111111')";
+	document.getElementById('start_h1').onclick=new Function("alert('111111')");
+}
+
+</script>
+</head>
+<body leftmargin="2" topmargin="0" marginwIdth="0" marginheight="0">
+<table wIdth="100%" border="0" align="center" cellpadding="2" cellspacing="1" class="border">
+  <tr class="topbg"> 
+    <td height="22" colspan="2" align="center"><strong>Scheduler Template</strong></td>
+  </tr>
+  <tr class="tdbg"> 
+    <td wIdth="100" height="30"><strong>Navigation:</strong></td>
+    <td height="30"><a href="template.php" target=main>List</a>&nbsp;|&nbsp;<a href="template.php?action=add" target=main>Add</a></td>
+  </tr>
+</table>
+<!--
+EOT;
+if($action=="main") {
+print <<<EOT
+-->
+<table width="100%" height="25"  border="0" cellpadding="0" cellspacing="0">
+  <tr class="topbg">
+    <td width="8%">&nbsp;</td>
+    <td width="92%" height="25"><strong>Current Location: Scheduler Template List</strong></td>
+  </tr>
+</table>
+<form action="?action=del" method=post name=myform onSubmit="return confirm('sure to delete?')">
+<table wIdth="100%"  border="0" cellspacing="2" cellpadding="2">
+        <tr class=title>
+                <td align="center"><b>Template Name</b></td>
+                <td align="center"><b>Type</b></td>
+                <td align="center"><b>Re-allocation Interval(m)</b></td>
+                <td align="center"><b>Sleep Interval(s)</b></td>
+                <td align="center"><b>Period</b></td>
+                <td align=center><b>Operator</b></td>
+        </tr>
+<!--
+EOT;
+$j=0;
+foreach($rsdb as $rs) {
+print <<<EOT
+-->     
+        <tr class="even" >
+                <td align="center">{$rs['name']}</td>
+                <td align="center">{$rs['type']}</td>
+                <td align="center">{$rs['r_interval']}</td>
+                <td align="center">{$rs['s_interval']}</td>
+                <td align="center">{$rs['period']}</td>
+		<td align=center><a href="?action=modify&name={$rs['name']}">Modify</a> | <a href="?id={$rs['id']}&action=del" onClick="return confirm('Sure to delete?')">Delete</a></td>
+	</tr>
+<!--
+EOT;
+$j++;
+}
+print <<<EOT
+-->
+</table>
+<input type="hIdden" name="boxs" value="{$j}">
+<table wIdth="100%"  border="0" cellspacing="2" cellpadding="2">
+
+                                        <tr>
+                                                <td  align=center>{$fenye}</td>
+                                        </tr>
+</table>
+<!--
+EOT;
+}
+else if($action=="modify" || $action=="add" || $action=="reset") {
+if($action=="modify" || $action=="reset") $title="Current Location: Scheduler Template({$_REQUEST[name]}) Modify";
+else {
+	$title="Add a Scheduler Template";
+	$row['name']='';
+}
+$ch[$row[type]]="selected";
+if($row[type]=='period_chaos'|| $row[type]=='period_fixed') $display_cycle='none';
+else $display_period='none';
+if($action=="add") $post="?action=saveadd";
+else $post="?action=savemodify&id={$row[id]}";
+print <<<EOT
+-->
+<table width="100%" height="25"  border="0" cellpadding="0" cellspacing="0">
+  <tr class="topbg">
+    <td width="8%">&nbsp;</td>
+    <td width="92%" height="25"><strong>$title</strong></td>
+  </tr>
+</table>
+
+<form action="{$post}" method=post name=myform">
+  <table wIdth=100% border="0" align="center" cellpadding="2" cellspacing="1" class="border" >
+        <tr align="center">
+                <td align="right" class="tdbg"><strong>Name:</strong></td>
+                <td align="left" class="tdbg">
+                        <input type="input" name="name" value=$row[name]>
+                </td>
+                <td align="right" class="tdbg"><strong>Type:</strong></td>
+                <td align="left" class="tdbg">
+                <select name="type"  style="width:200px" onchange="show_type_div(this.value)" >
+                        <option value="cycle" $ch[cycle]>cycle</option>
+                        <option value="period_chaos" $ch[period_chaos]>period_chaos</option>
+                        <option value="period_fixed" $ch[period_fixed]>period_fixed</option>
+                </select>
+                </td>
+        </tr>
+
+<tr>
+<td colspan="4" class="tdbg">
+<div style="display:{$display_period}" id="type_period_div">
+<table border="0" cellpadding="0" cellspacing="0" width="100%" align="center">
+                                <tr>
+                                 <td class="text" width="100%" align="center">
+                                  <input type=radio name="day_remain_tab" value="day_remain_1" onclick="toggle2('day_remain_tab', 7, 0)" checked >Monday&nbsp;
+                                  <input type=radio name="day_remain_tab" value="day_remain_2" onclick="toggle2('day_remain_tab', 7, 1)" >Tuesday&nbsp;
+                                  <input type=radio name="day_remain_tab" value="day_remain_3" onclick="toggle2('day_remain_tab', 7, 2)" >Wendesday&nbsp;
+                                  <input type=radio name="day_remain_tab" value="day_remain_4" onclick="toggle2('day_remain_tab', 7, 3)" >Thursday&nbsp;
+                                  <input type=radio name="day_remain_tab" value="day_remain_5" onclick="toggle2('day_remain_tab', 7, 4)" >Friday&nbsp;
+                                  <input type=radio name="day_remain_tab" value="day_remain_6" onclick="toggle2('day_remain_tab', 7, 5)" >Saturday&nbsp;
+                                  <input type=radio name="day_remain_tab" value="day_remain_7" onclick="toggle2('day_remain_tab', 7, 6)" >Sunday&nbsp;
+
+                                 </td>
+                                </tr>
+<!--
+EOT;
+$day=1;
+for(;$day<=7;$day++) {
+	$dayi=$day-1;
+	if($day==1) $display='';
+	else $display="none"; 
+print <<<EOT
+-->
+                                <tr>
+                                 <td>
+                                  <div id="day_remain_tab_{$dayi}_div" style="display:{$display}">
+                                  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+<!--
+EOT;
+$i=0;
+for(;$i<9;$i++) {
+        $ii=$day*10+$i+1;
+
+print <<<EOT
+-->
+                                    <tr>
+                                     <td width="120" height="25" class="title1">Period{$ii} Start</td>
+                                     <td width="160" class="text">
+                                      <input type="text" name="period_start{$ii}" id="period_start{$ii}" value="{$start_h[$day][$i]}:{$start_m[$day][$i]}" class="edit" onclick="_SetTime(this)">
+                                     </td>
+                                     <td width="120" height="25" class="title1">Period{$ii} End</td>
+                                     <td width="160" class="text">
+                                      <input type="text" name="period_end{$ii}" id="period_end{$ii}" value="{$stop_h[$day][$i]}:{$stop_m[$day][$i]}" class="edit" onclick="_SetTime(this)">
+                                     </td>
+
+
+                                    </tr>
+<!--
+EOT;
+}
+print <<<EOT
+-->
+                                  </table>
+                                  </div>
+                                 </td>
+                                </tr>
+<!--
+EOT;
+}
+print <<<EOT
+-->
+</table>
+</div>
+</td>
+</tr>
+<tr>
+<td colspan="4" class="tdbg">
+<div style="display:{$display_cycle}" id="type_cycle_div">
+<table wIdth=100% border="0" align="center" cellpadding="2" cellspacing="1" class="border" >
+        <tr align="center">
+                <td align="right" class="tdbg"><strong>Re-allocation Interval(m):</strong></td>
+                <td align="left" class="tdbg">
+                        <input type="input" name="r_interval" value="$row[r_interval]" onblur="onfocus_check_integer(this, 0, 42949672)">
+                </td> 
+                <td align="right" class="tdbg"><strong>Sleep Interval(s):</strong></td>
+                <td align="left" class="tdbg">
+                        <input type="input" name="s_interval" value="$row[s_interval]" onblur="onfocus_check_integer(this, 0, 42949672)">
+                </td>
+	</tr>
+</table>
+</div>
+</td>
+</tr>
+<div  id="submit_div">
+<table  align="center">
+    <tr>
+      <td height="40" colspan="2" align="center" class="tdbg">
+<input  type="submit" name="Submit" value="Save" style="cursor:hand;">
+&nbsp; <input name="Reset" type="button" Id="Reset" value="Reset" onClick="window.location.href='?action=reset&name={$name}'" style="cursor:hand;">
+&nbsp; <input name="Cancel" type="button" Id="Cancel" value="Cancel" onClick="window.location.href='?action={$action}&name={$name}'" style="cursor:hand;">
+&nbsp; Follow a Template:<select name="follow" style="width:80px" onchange=javascript:window.location='?action={$action}&name={$name}&follow='+this.options[this.selectedIndex].value;>
+<option value="">none</option>
+<!--
+EOT;
+foreach($template_db as $rs){
+	if($rs==$_REQUEST[follow]) $s="selected";
+	else $s="";
+print <<<EOT
+-->
+<option value="{$rs}" {$s}>{$rs}</option>
+<!--
+EOT;
+}
+print <<<EOT
+-->
+</select>
+      </td>
+</tr>
+</table>
+</div>
+      </td>
+</tr>
+</table>
+<!--
+EOT;
+}
+print <<<EOT
+-->
+</form>
+
+					  </td> 
+					</tr>
+</table>
+				
+</body>
+</html>
+<!--
+EOT;
+?>
+-->

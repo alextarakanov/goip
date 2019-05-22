@@ -1,0 +1,389 @@
+<!--
+<?php
+print <<<EOT
+-->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="../style.css" rel="stylesheet" type="text/css">
+<title>goip management</title>
+<script src="../check.js"></script>
+<script language="javascript">
+function unselectall()
+	{
+	    if(document.myform.chkAll.checked){
+		document.myform.chkAll.checked = document.myform.chkAll.checked&0;
+	    } 	
+	}
+
+function CheckAll(form)
+	{
+		var trck;
+		var e;
+		for (var i=0;i<form.elements.length;i++)
+	    {
+		    e = form.elements[i];
+		    if (e.type == 'checkbox' && e.id != "chkAll" && e.disabled==false){
+				e.checked = form.chkAll.checked;
+		 		do {e=e.parentNode} while (e.tagName!="TR") 
+		 		if(form.chkAll.checked)
+		 			e.className = 'even marked';
+		 		else
+		 			e.className = 'even';
+			}
+	    }
+		//form.chkAll.classname = 'even';
+	}
+
+function mouseover(obj) {
+                obj.className += ' hover';
+				//alert(obj.className);
+            	
+			}
+
+function mouseout(obj) {
+            	obj.className = obj.className.replace( ' hover', '' );
+				//alert(obj.className);
+			}
+
+function trclick(obj) {
+		//alert("ddddd");
+        var checkbox = obj.getElementsByTagName( 'input' )[0];
+        //if ( checkbox && checkbox.type == 'checkbox' ) 
+        checkbox.checked ^= 1;
+		if(checkbox.checked)
+			obj.className = 'even marked';
+		else obj.className = 'even';
+//		var ckpage=document.modifyform.elements['chkAll'+num];
+	    if(document.myform.chkAll.checked){
+		document.myform.chkAll.checked = document.myform.chkAll.checked&0;
+	    } 	
+		
+
+		}
+
+function showbind(value){
+        if(value != 0) showbind1.style.display='none';
+        else showbind1.style.display='';
+}
+
+</script>
+</head>
+<body leftmargin="2" topmargin="0" marginwIdth="0" marginheight="0">
+<table wIdth="100%" border="0" align="center" cellpadding="2" cellspacing="1" class="border">
+  <tr class="topbg"> 
+    <td height="22" colspan="2" align="center"><strong>Goip Settings</strong></td>
+  </tr>
+  <tr class="tdbg"> 
+    <td wIdth="100" height="30"><strong>Navigation:</strong></td>
+    <td height="30"><a href="goip.php" target=main>GoIP List</a>&nbsp;|&nbsp;<a href="goip.php?action=add" target=main>Add GoIP</a></td>
+  </tr>
+</table>
+<!--
+EOT;
+if($action=="main") {
+print <<<EOT
+-->
+<br>
+<table width="100%" height="25"  border="0" cellpadding="0" cellspacing="0">
+  <tr class="topbg">
+    <td width="8%">&nbsp;</td>
+    <td width="92%" height="25"><strong>Current Location: GoIP List</strong></td>
+  </tr>
+</table>
+<form action="goip.php?action=del" method=post name=myform onSubmit="return confirm('sure to delete?')">
+<table wIdth="100%"  border="0" cellspacing="2" cellpadding="2">
+	<tr class=title>
+		<td align="center"><b>Line Status</b></td>
+		<td align="center"><b>GSM Status</b></td>
+		<td align="center"><b>ID</b></td>
+		<td align="center"><b>GoIP Name</b></td>
+		<td align="center"><b>Line ID</b></td>
+		<td align="center"><b>Password</b></td>
+		<td align="center"><b>Bind Mode</b></td>
+		<td align="center"><b>Group</b></td>
+		<td align="center"><b>SIM Bind</b></td>
+		<td align="center"><b>Area ID</b></td>
+		<td align="center"><b>Area Name</b></td>
+		<td align="center"><b>Lines</b></td>
+		<td align="center"><b>Enable</b></td>
+		<td align=center><b>Operator</b></td>
+	</tr>
+<!--
+EOT;
+$j=0;
+foreach($rsdb as $rs) {
+print <<<EOT
+-->
+	<tr class="even" >
+		<td align="center">{$rs['alive']}</td>
+		<td align="center">{$rs['gsm']}</td>
+		<td align="center">{$rs['goip_name']}</td>
+		<td align="center">{$rs['goip_tag']}</td>
+		<td align="center">{$rs['line_name']}</td>
+		<td align="center">{$rs['goip_pass']}</td>
+		<td align="center">{$rs['bind_type']}</td>
+		<td align="center">{$rs['sim_team_name']}</td>
+		<td align="center">{$rs['sim_name']}</td>
+		<td align="center">{$rs['goip_zone']}</td>
+		<td align="center">{$rs['zone_tag']}</td>
+		<td align="center">{$rs['goip_type']}</td>	
+		<td align="center">{$rs['disable']}</td>
+
+		<td align=center><a href="goip.php?action=modify&name={$rs['line_name']}">Modify</a> | <a href="goip.php?action=reboot&name={$rs['goip_name']}" onClick="return confirm('Sure to reboot Goip?')">Reboot Machine</a> | <a href="goip.php?action=reboot_module&name={$rs['line_name']}" onClick="return confirm('Sure to reboot line?')">Reboot Module</a> | <a href="goip.php?name={$rs['goip_name']}&action=del" onClick="return confirm('Delete this line will delete all lines of this goip，sure to delete?')">Delete</a></td>
+    </tr>
+
+<!--
+EOT;
+$j++;
+}
+print <<<EOT
+-->
+</table>
+<input type="hIdden" name="boxs" value="{$j}">
+<table wIdth="100%"  border="0" cellspacing="2" cellpadding="2">
+
+
+					<tr>
+						<td  align=center>{$fenye}</td>
+					</tr>
+</table>
+<!--
+EOT;
+}
+else if($action=="add")
+{
+print <<<EOT
+-->
+<table width="100%" height="25"  border="0" cellpadding="0" cellspacing="0">
+  <tr class="topbg">
+    <td width="8%">&nbsp;</td>
+    <td width="92%" height="25"><strong>Current Location:Add Goip</strong></td>
+  </tr>
+</table>
+<form method="post" action="goip.php?action=saveadd" name="form1" onSubmit="javascript:return check_pw();">
+  <br>
+  <br>
+  <table wIdth="400" border="0" align="center" cellpadding="2" cellspacing="1" class="border" >
+    <tr class="title"> 
+      <td height="22" colspan="2"> <div align="center"><strong>Add Goip</strong></div></td>
+    </tr>
+    <tr> 
+      <td wIdth="150" align="right" class="tdbg"><strong>ID(Number):</strong></td>
+      <td class="tdbg"><input type="input" name="name" id="name" onblur="onfocus_check_integer(this, 1, 42949672)"></td>
+    </tr>
+    <tr>
+      <td wIdth="150" align="right" class="tdbg"><strong>GoIP Name:</strong></td>
+      <td class="tdbg"><input type="input" name="goip_tag"></td>
+    </tr>
+    <tr> 
+      <td wIdth="150" align="right" class="tdbg"><strong>Type:</strong></td>
+      <td class="tdbg"><select name="goiptype" style="width:135">
+        <option value="1">1 line</option>
+	<option value="4">4 line</option>
+	<option value="8">8 line</option>
+      </select></td>
+    </tr>
+    <tr>
+      <td wIdth="150" align="right" class="tdbg"><strong>Group:</strong></td>
+      <td class="tdbg"><select name="team_id" style="width:135">                                                 
+	<option value="0">none(fixed mode)</option>
+<!--
+EOT;
+
+foreach($prsdb as $prs){
+
+print <<<EOT
+-->
+        <option value="$prs[sim_team_id]">$prs[sim_team_name]</option>
+
+<!--
+EOT;
+}
+print <<<EOT
+-->
+      </select></td>                                                                                              
+    </tr>
+
+    <tr>
+      <td wIdth="150" align="right" class="tdbg"><strong>Area(Number):</strong></td>
+      <td class="tdbg"><input type="input" name="zone" id="zone" value='0' onblur="onfocus_check_integer(this, 0, 30000)"></td>
+    </tr>
+    <tr>
+      <td wIdth="150" align="right" class="tdbg"><strong>Area Name:</strong></td>
+      <td class="tdbg"><input type="input" name="zone_tag"></td>
+    </tr>
+    <tr> 
+      <td wIdth="150" align="right" class="tdbg"><strong>Password:</strong></td>
+      <td class="tdbg"><input type="password" name="Password"> </td>
+    </tr>
+    <tr> 
+      <td wIdth="150" align="right" class="tdbg"><strong>Confirm Passwd:</strong></td>
+      <td class="tdbg"><input type="password" name="PwdConfirm"> </td>
+    </tr>
+    <tr> 
+      <td height="40" colspan="2" align="center" class="tdbg"><input name="Action" type="hIdden" Id="Action" value="Modify"> 
+        <input  type="submit" name="Submit" value="Add" style="cursor:hand;"> 
+        &nbsp; <input name="Cancel" type="button" Id="Cancel" value="Cancel" onClick="window.location.href='goip.php'" style="cursor:hand;"></td>
+    </tr>
+  </table>
+</form>
+<!--
+EOT;
+}
+else if($action=="modify")
+{
+print <<<EOT
+-->
+<table width="100%" height="25"  border="0" cellpadding="0" cellspacing="0">
+  <tr class="topbg">
+    <td width="8%">&nbsp;</td>
+    <td width="92%" height="25"><strong>Current Location: Modify a GoIP</strong></td>
+  </tr>
+</table>
+<form method="post" action="goip.php?action=savemodify&id=$rs[goipid]" name="form1" onSubmit="javascript:return check_pw();">
+  <br>
+  <br>
+  <table wIdth="400" border="0" align="center" cellpadding="2" cellspacing="1" class="border" >
+    <tr class="title"> 
+      <td height="22" colspan="2"> <div align="center"><strong>Modify a GoIP Settings</strong></div></td>
+    </tr>
+    <tr> 
+      <td wIdth="150" align="right" class="tdbg"><strong>GoIP ID:</strong></td>
+      <td class="tdbg">$rs[line_name]</td>
+    </tr>
+    <tr>
+      <td wIdth="150" align="right" class="tdbg"><strong>GoIP Name:</strong></td>
+      <td class="tdbg"><input type="input" name="goip_tag" id="goip_tag" value="$rs[goip_tag]"></td>
+    </tr>
+    <tr>
+      <td wIdth="150" align="right" class="tdbg"><strong>Group:</strong></td>
+      <td class="tdbg">
+          <select name="team_id" style="width:135" onchange="showbind(this.value)">
+	<option value="0" $select >None(for fixed bind mode)</option>
+<!--
+EOT;
+foreach($prsdb as $prs){
+
+if($rs[goip_team_id]==$prs[sim_team_id])
+        $select=' selected';
+else                                                                                                              
+        $select='';
+print <<<EOT
+-->
+        <option value="$prs[sim_team_id]" $select >$prs[sim_team_name]</option>
+
+<!--
+EOT;
+}
+if($rs[goip_team_id]!=0) $display='none'; 
+else $display='';
+print <<<EOT
+-->
+      </select></td>
+    </tr>
+    <tr style="display:{$display}" Id='showbind1'>
+      <td wIdth="150" align="right" class="tdbg"><strong>Plan to bind Sim:</strong></td>
+      <td class="tdbg"><select name="sim_name" style="width:135">                                 
+        <option value="0">none</option>
+<!--
+EOT;
+$old_plan_sim_name=0;
+foreach($grsdb as $prs){
+    
+if($rs[line_name]==$prs[plan_line_name]){
+        $old_plan_sim_name=$prs[sim_name];
+        $select=' selected';
+}       
+else                                                                                                              
+        $select='';
+print <<<EOT
+-->
+        <option value="$prs[sim_name]" $select >$prs[sim_name]</option>
+
+<!--
+EOT;
+}
+print <<<EOT
+-->     
+
+      </select></td>
+    </tr>
+    <tr>
+      <td wIdth="150" align="right" class="tdbg"><strong>Area(Number):</strong></td>
+      <td class="tdbg"><input type="input" name="zone" id="zone" value="$rs[goip_zone]" onblur="onfocus_check_integer(this, 0, 30000)"></td>
+    </tr>
+    <tr>
+      <td wIdth="150" align="right" class="tdbg"><strong>Area Name:</strong></td>
+      <td class="tdbg"><input type="input" name="zone_tag" id="zone_tag" value="$rs[zone_tag]"></td>
+    </tr>
+    <tr>
+      <td wIdth="150" align="right" class="tdbg"><strong>Enable line</strong></td>
+      <td class="tdbg">
+        <select name="dev_disable">
+          <option value="0" $ck1>Enable</option>
+          <option value="1" $ck2>Disable</option>
+        </select>
+      </td>
+    </tr>
+    <tr> 
+      <td wIdth="150" align="right" class="tdbg"><strong>New Password:</strong></td>
+      <td class="tdbg"><input type="password" name="Password" > </td>
+    </tr>
+    <tr> 
+      <td wIdth="150" align="right" class="tdbg"><strong>Confirm Passwd:</strong></td>
+      <td class="tdbg"><input type="password" name="PwdConfirm"> </td>
+    </tr>
+	<tr> <td height="20" colspan="2" align="center"  class="tdbg"><li>Change passord of one line will change all line of this goip.</li>
+		<li>Will not change password with blank input_box named "New Password"</li> </td></tr>	
+    <tr> 
+      <td height="40" colspan="2" align="center" class="tdbg">
+        <input name="old_zone" type="hIdden" Id="old_zone" value="{$rs['goip_zone']}">
+        <input name="old_plan_sim_name" type="hIdden" Id="old_plan_sim_name" value="{$old_plan_sim_name}">
+        <input name="line_name" type="hIdden" Id="line_name" value="{$rs['line_name']}">
+        <input name="oldname" type="hIdden" Id="oldname" value="{$rs['goip_name']}">
+        <input name="old_team_id" type="hIdden" Id="old_team_id" value="{$rs['goip_team_id']}">
+        <input name="old_disable" type="hIdden" Id="old_disable" value="{$rs['dev_disable']}">
+        <input  type="submit" name="Submit" value="Save" style="cursor:hand;"> 
+        &nbsp; <input name="Cancel" type="button" Id="Cancel" value="Cancel" onClick="window.location.href='goip.php'" style="cursor:hand;"></td>
+    </tr>
+  </table>
+</form>
+<!--
+EOT;
+}
+print <<<EOT
+-->
+<script language="JavaScript" type="text/JavaScript">
+function check_pw()
+{
+  if(document.form1.Password.value=="" && document.form1.Submit.value=="Save")
+  	return true;
+  if(document.form1.Password.value=="")
+    {
+      alert("Please input password!");
+	  document.form1.Password.focus();
+      return false;
+    }
+    
+  if((document.form1.Password.value)!=(document.form1.PwdConfirm.value))
+    {
+      alert("Password and Confirm Password are different!");
+	  document.form1.PwdConfirm.select();
+	  document.form1.PwdConfirm.focus();	  
+      return false;
+    }
+}
+</script>
+</form>
+
+					  </td> 
+					</tr>
+</table>
+				
+</body>
+</html>
+<!--
+EOT;
+?>
+-->

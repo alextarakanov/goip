@@ -1,0 +1,386 @@
+<!--
+<?php
+print <<<EOT
+-->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="style.css" rel="stylesheet" type="text/css">
+<title>rule management</title>
+<script language="javascript">
+function unselectall()
+	{
+	    if(document.myform.chkAll.checked){
+		document.myform.chkAll.checked = document.myform.chkAll.checked&0;
+	    } 	
+	}
+
+function CheckAll(form)
+	{
+		var trck;
+		var e;
+		for (var i=0;i<form.elements.length;i++)
+	    {
+		    e = form.elements[i];
+		    if (e.type == 'checkbox' && e.id != "chkAll" && e.disabled==false){
+				e.checked = form.chkAll.checked;
+		 		do {e=e.parentNode} while (e.tagName!="TR") 
+		 		if(form.chkAll.checked)
+		 			e.className = 'even marked';
+		 		else
+		 			e.className = 'even';
+			}
+	    }
+		//form.chkAll.classname = 'even';
+	}
+
+function mouseover(obj) {
+                obj.className += ' hover';
+				//alert(obj.className);
+            	
+			}
+
+function mouseout(obj) {
+            	obj.className = obj.className.replace( ' hover', '' );
+				//alert(obj.className);
+			}
+
+function trclick(obj) {
+		//alert("ddddd");
+        var checkbox = obj.getElementsByTagName( 'input' )[0];
+        //if ( checkbox && checkbox.type == 'checkbox' ) 
+        checkbox.checked ^= 1;
+		if(checkbox.checked)
+			obj.className = 'even marked';
+		else obj.className = 'even';
+//		var ckpage=document.modifyform.elements['chkAll'+num];
+	    if(document.myform.chkAll.checked){
+		document.myform.chkAll.checked = document.myform.chkAll.checked&0;
+	    } 	
+		
+
+		}
+
+</script>
+</head>
+<body leftmargin="2" topmargin="0" marginwIdth="0" marginheight="0">
+<table wIdth="100%" border="0" align="center" cellpadding="2" cellspacing="1" class="border">
+  <tr class="topbg"> 
+    <td height="22" colspan="2" align="center"><strong>绑定规则参数设置</strong></td>
+  </tr>
+  <tr class="tdbg"> 
+    <td wIdth="100" height="30"><strong>管理导航:</strong></td>
+    <td height="30"><a href="rule.php" target=main>参数管理</a>&nbsp;|&nbsp;<a href="rule.php?action=add" target=main>添加规则</a></td>
+  </tr>
+</table>
+<!--
+EOT;
+if($action=="main") {
+print <<<EOT
+-->
+<br>
+<table width="100%" height="25"  border="0" cellpadding="0" cellspacing="0">
+  <tr class="topbg">
+    <td width="8%">&nbsp;</td>
+    <td width="92%" height="25"><strong>当前位置：绑定规则参数设置</strong></td>
+  </tr>
+</table>
+<form action="rule.php?action=del" method=post name=myform onSubmit="return confirm('确认删除?')">
+<table wIdth="100%"  border="0" cellspacing="2" cellpadding="2">
+	<tr class=title>
+		<td wIdth="35" align=center height="25"><b>选择</b></td>
+		<td align="center"><b>名称</b></td>
+		<td align="center"><b>Sim组</b></td>
+		<td align="center"><b>Goip组</b></td>
+		<td align="center"><b>规则</b></td>
+		<td  align=center><b>操作</b></td>
+	</tr>
+<!--
+EOT;
+$j=0;
+foreach($rsdb as $rs) {
+print <<<EOT
+-->
+	<tr class="even" onMouseOver="mouseover(this)" onMouseOut="mouseout(this)" onMouseDown="trclick(this)">
+		<td align=center wIdth="35"><input name="Id{$j}" type='checkbox' onClick="return false" value="{$rs['rule_id']}"></td>
+		<td align="center">{$rs['rule_name']}</td>
+		<td align="center">{$rs['sim_team_name']}</td>
+		<td align="center">{$rs['goip_team_name']}</td>
+		<td align="center">{$rs['rule']}</td>
+				
+		<td align=center><a href="rule.php?action=modify&id={$rs['rule_id']}">修改</a> | <a href="rule.php?id={$rs['rule_id']}&action=del" onClick="return confirm('确认删除?')">删除</a></td>
+    </tr>
+
+<!--
+EOT;
+$j++;
+}
+print <<<EOT
+-->
+</table>
+<input type="hIdden" name="boxs" value="{$j}">
+<table wIdth="100%"  border="0" cellspacing="2" cellpadding="2">
+
+
+					<tr>
+						<td height="30" ><input name="chkAll" type="checkbox" Id="chkAll" onclick=CheckAll(this.form) value="checkbox"> 
+					  选择当前页面<input name="submit" type='submit' value='删除所选'></td>
+					</tr>
+					<tr>
+						<td  align=center>{$fenye}</td>
+					</tr>
+</table>
+<!--
+EOT;
+}
+else if($action=="add")
+{
+print <<<EOT
+-->
+<table width="100%" height="25"  border="0" cellpadding="0" cellspacing="0">
+  <tr class="topbg">
+    <td width="8%">&nbsp;</td>
+    <td width="92%" height="25"><strong>当前位置：添加绑定规则</strong></td>
+  </tr>
+</table>
+<form method="post" action="rule.php?action=saveadd" name="form1">
+  <br>
+  <br>
+  <table wIdth="300" border="0" align="center" cellpadding="2" cellspacing="1" class="border" >
+    <tr class="title"> 
+      <td height="22" colspan="3"> <div align="center"><strong>添 加 规 则</strong></div></td>
+    </tr>
+    <tr> 
+      <td wIdth="100" align="right" class="tdbg"><strong>规则名称:</strong></td>
+      <td class="tdbg" colspan="2"><input type="input" name="name"></td>
+    </tr>
+    <tr> 
+      <td wIdth="100" align="right" class="tdbg"><strong>Sim 组:</strong></td>
+      <td class="tdbg" colspan="2"><select name="sid" style="width:135">
+<!--
+EOT;
+
+foreach($srsdb as $prs){
+
+print <<<EOT
+-->
+        <option value="$prs[sim_team_id]">$prs[sim_team_name]</option>
+<!--
+EOT;
+}
+print <<<EOT
+-->
+      </select></td>
+    </tr>
+    <tr>                                                                                                          
+      <td wIdth="100" align="right" class="tdbg"><strong>Goip 组:</strong></td>
+      <td class="tdbg" colspan="2"><select name="gid" style="width:135">                                                 
+<!--
+EOT;
+
+foreach($grsdb as $prs){
+
+print <<<EOT
+-->
+        <option value="$prs[goip_team_id]">$prs[goip_team_name]</option>
+        
+<!--    
+EOT;
+}
+print <<<EOT
+-->
+      </select></td>
+    </tr>
+    <tr class="title">
+      <td height="22" colspan="3"> <div align="center"><strong>规 则 步 骤</strong></div></td>
+    </tr>
+    <tr class="title">
+      <td height="22" align="right">步骤</td><td height="22" >操作</td><td height="22" >持续时间(分)</td>
+    </tr>
+<!--
+EOT;
+for($i=1;$i<=5;$i++){
+print <<<EOT
+-->
+    <tr>
+      <td height="22" class="tdbg" align="right">步骤{$i}</td>
+      <td height="22" class="tdbg">
+        <select name="step{$i}">
+        <option value="7">stop</option>
+        <option value="6">active</option>
+        <option value="1">goto step1</option>
+        <option value="2">goto step2</option>
+        <option value="3">goto step3</option>
+        <option value="4">goto step4</option>
+        <option value="5">goto step5</option>
+        </select>
+      </td>
+      <td height="22" class="tdbg"><input type="input" name="step{$i}_time" style="width:50"></td>                                 
+    </tr>
+<!--    
+EOT;
+}
+print <<<EOT
+-->
+    <tr> 
+      <td height="40" colspan="3" align="center" class="tdbg"><input name="Action" type="hIdden" Id="Action" value="Modify"> 
+        <input  type="submit" name="Submit" value="添加" style="cursor:hand;"> 
+        &nbsp; <input name="Cancel" type="button" Id="Cancel" value="取消" onClick="window.location.href='rule.php'" style="cursor:hand;"></td>
+    </tr>
+  </table>
+</form>
+<!--
+EOT;
+}
+else if($action=="modify")
+{
+print <<<EOT
+-->
+<table width="100%" height="25"  border="0" cellpadding="0" cellspacing="0">
+  <tr class="topbg">
+    <td width="8%">&nbsp;</td>
+    <td width="92%" height="25"><strong>当前位置：修改规则</strong></td>
+  </tr>
+</table>
+<form method="post" action="rule.php?action=savemodify" name="form1" >
+  <br>
+  <br>
+  <table wIdth="300" border="0" align="center" cellpadding="2" cellspacing="1" class="border" >
+    <tr class="title"> 
+      <td height="22" colspan="3"> <div align="center"><strong>修 改 绑 定 规 则</strong></div></td>
+    </tr>
+    <tr> 
+      <td wIdth="100" align="right" class="tdbg"><strong>名称:</strong></td>
+      <td class="tdbg" colspan="2"><input type="input" name="name" value=$rs[rule_name]>  </td>
+    </tr>
+    <tr>
+      <td wIdth="100" align="right" class="tdbg"><strong>Sim 组:</strong></td>
+      <td class="tdbg" colspan="2"><select name="sid" style="width:135">
+	<option value="$rs[sim_team_id]" selected>$rs[sim_team_name]</option>
+<!--
+EOT;
+foreach($srsdb as $prs){
+print <<<EOT
+-->
+        <option value="$prs[sim_team_id]">$prs[sim_team_name]</option>
+<!--
+EOT;
+}
+print <<<EOT
+-->
+      </select></td>
+    </tr>
+    <tr>
+      <td wIdth="100" align="right" class="tdbg"><strong>Goip 组:</strong></td>
+      <td class="tdbg" colspan="2"><select name="gid" style="width:135">
+	<option value="$rs[goip_team_id]" selected>$rs[goip_team_name]</option>
+<!--
+EOT;
+
+foreach($grsdb as $prs){
+
+print <<<EOT
+-->
+        <option value="$prs[goip_team_id]">$prs[goip_team_name]</option>
+
+<!--    
+EOT;
+}
+print <<<EOT
+-->
+      </select></td>
+    </tr>
+    <tr class="title">
+      <td height="22" colspan="3"> <div align="center"><strong>规 则 步 骤</strong></div></td>
+    </tr>
+    <tr class="title">                                                                                            
+      <td height="22" align="right">步骤</td><td height="22" >操作</td><td height="22" >持续时间(分)</td>
+    </tr>
+<!--
+EOT;
+print_r($rs);
+for($i=1;$i<=5;$i++){
+	unset($ck);
+	$ck=array(8);
+	$ck[$rs["step$i"]]="selected";
+	//$a="step$i"."_time";
+	//echo $a;
+	//echo $rs["step$i"."_time"];
+	//echo $rs["step1_time"];
+print <<<EOT
+-->
+    <tr>                                                                                            
+      <td height="22" class="tdbg" align="right">步骤{$i}</td>
+      <td height="22" class="tdbg">
+	<select name="step{$i}">
+	<option value="7" {$ck[7]}>stop</option> 
+	<option value="6" {$ck[6]}>active</option>
+        <option value="1" {$ck[1]}>goto step1</option>
+        <option value="2" {$ck[2]}>goto step2</option>
+        <option value="3" {$ck[3]}>goto step3</option>
+	<option value="4" {$ck[4]}>goto step4</option>
+        <option value="5" {$ck[5]}>goto step5</option>
+	</select>
+      </td>
+      <td height="22" class="tdbg"><input type="input" name="step{$i}_time" style="width:50" value='{$rs["step{$i}_time"]}'></td>
+    </tr>
+<!--    
+EOT;
+}
+print <<<EOT
+-->
+	<tr> <td height="20" colspan="3" align="center"  class="tdbg"></td></tr>	
+    <tr> 
+      <td height="40" colspan="3" align="center" class="tdbg"><input name="id" type="hIdden" Id="id" value="{$rs[rule_id]}"> 
+        <input  type="submit" name="Submit" value="确定" style="cursor:hand;"> 
+        &nbsp; <input name="Cancel" type="button" Id="Cancel" value="取消" onClick="window.location.href='rule.php'" style="cursor:hand;"></td>
+    </tr>
+  </table>
+</form>
+<!--
+EOT;
+}
+print <<<EOT
+-->
+<script language="JavaScript" type="text/JavaScript">
+function check_pw()
+{
+  if(document.form1.Password.value=="" && document.form1.Submit.value=="确定")
+  	return true;
+  if(document.form1.Password.value=="")
+    {
+      alert("密码不能为空！");
+	  document.form1.Password.focus();
+      return false;
+    }
+    
+  if((document.form1.Password.value)!=(document.form1.PwdConfirm.value))
+    {
+      alert("初始密码与确认密码不同!");
+	  document.form1.PwdConfirm.select();
+	  document.form1.PwdConfirm.focus();	  
+      return false;
+    }
+}
+function check()
+{
+  if (document.myform.keyword.value=="")
+  {
+    alert("请输入关键字!");
+	document.myform.keyword.focus();
+	return false;
+  }
+}
+</script>
+</form>
+
+					  </td> 
+					</tr>
+</table>
+				
+</body>
+</html>
+<!--
+EOT;
+?>
+-->

@@ -1,0 +1,291 @@
+<!--
+<?php
+print <<<EOT
+-->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="../style.css" rel="stylesheet" type="text/css">
+<title>user management</title>
+<script src="../check.js"></script>
+<script language="javascript">
+function unselectall()
+	{
+	    if(document.myform.chkAll.checked){
+		document.myform.chkAll.checked = document.myform.chkAll.checked&0;
+	    } 	
+	}
+
+function CheckAll(form)
+	{
+		var trck;
+		var e;
+		for (var i=0;i<form.elements.length;i++)
+	    {
+		    e = form.elements[i];
+		    if (e.type == 'checkbox' && e.id != "chkAll" && e.disabled==false){
+				e.checked = form.chkAll.checked;
+		 		do {e=e.parentNode} while (e.tagName!="TR") 
+		 		if(form.chkAll.checked)
+		 			e.className = 'even marked';
+		 		else
+		 			e.className = 'even';
+			}
+	    }
+		//form.chkAll.classname = 'even';
+	}
+
+function mouseover(obj) {
+                obj.className += ' hover';
+				//alert(obj.className);
+            	
+			}
+
+function mouseout(obj) {
+            	obj.className = obj.className.replace( ' hover', '' );
+				//alert(obj.className);
+			}
+
+function trclick(obj) {
+		//alert("ddddd");
+        var checkbox = obj.getElementsByTagName( 'input' )[0];
+        //if ( checkbox && checkbox.type == 'checkbox' ) 
+        checkbox.checked ^= 1;
+		if(checkbox.checked)
+			obj.className = 'even marked';
+		else obj.className = 'even';
+//		var ckpage=document.modifyform.elements['chkAll'+num];
+	    if(document.myform.chkAll.checked){
+		document.myform.chkAll.checked = document.myform.chkAll.checked&0;
+	    } 	
+		
+
+		}
+
+function showbind(value){
+        if(value != 0) showbind1.style.display='none';
+        else showbind1.style.display='';
+}
+
+</script>
+</head>
+<body leftmargin="2" topmargin="0" marginwIdth="0" marginheight="0">
+<table wIdth="100%" border="0" align="center" cellpadding="2" cellspacing="1" class="border">
+  <tr class="topbg"> 
+    <td height="22" colspan="2" align="center"><strong>GoIP Channel Configuration</strong></td>
+  </tr>
+  <tr class="tdbg"> 
+    <td wIdth="100" height="30"><strong>Navigation:</strong></td>
+    <td height="30"><a href="?name=$_REQUEST[name]" target=main>Refresh</a>&nbsp;|&nbsp;</td>
+  </tr>
+</table>
+<!--
+EOT;
+if($action=="main") {
+//if($_GET['name']) 
+$op="<td align=center><b>Operation</b></td>";
+print <<<EOT
+-->
+<table width="100%" height="25"  border="0" cellpadding="0" cellspacing="0">
+  <tr class="topbg">
+    <td width="8%">&nbsp;</td>
+    <td width="92%" height="25"><strong>Current Location: GoIP({$_GET['name']})Channel List</strong></td>
+  </tr>
+</table>
+<form action="goip.php?action=del" method=post name=myform onSubmit="return confirm('Sure to delete?')">
+<table wIdth="100%"  border="0" cellspacing="2" cellpadding="2">
+	<tr class=title>
+		<td align="center"><b>Line ID</b></td>
+		<td align="center"><b>Login</b></td>
+		<td align="center"><b>GSM Status</b></td>
+		<td align="center"><b>Operator</b></td>
+		<td align="center"><b>Signal</b></td>
+		<td align="center"><b>Call Status</b></td>
+		<td align="center"><b>Bind Mode</b></td>
+		<td align="center"><b>Group</b></td>
+		<td align="center"><b>Sim Bind</b></td>
+		<td align="center"><b>IMEI Using</b></td>
+		<td align="center"><b>Zone ID</b></td>
+		<td align="center"><b>Zone Name</b></td>
+		<td align="center"><b>Enable</b></td>
+		{$op}
+	</tr>
+<!--
+EOT;
+$j=0;
+foreach($rsdb as $rs) {
+$op="<td align=center><a href=\"logs.php?line_name={$rs['line_name']}\">Logs</a> | <a href=\"call_record.php?line_name={$rs['line_name']}\">Record</a> | <a href=\"cdr.php?type=line&name={$rs['line_name']}\">CDR</a> | <a href=\"?action=netcheck&line_name={$rs['line_name']}&goip_name={$rs['goip_name']}\">Net_Check</a></td>";
+if($_GET['name']) $op="<td align=center><a href=\"logs.php?line_name={$rs['line_name']}\">Logs</a> | <a href=\"call_record.php?line_name={$rs['line_name']}\">Record</a> | <a href=\"cdr.php?type=line&name={$rs['line_name']}\">CDR</a> | <a href=\"device_line.php?action=modify&name={$rs['line_name']}\">Modify</a> | <a href=\"device_line.php?action=reboot_module&name={$rs['line_name']}&goip_name={$rs['goip_name']}\" onClick=\"return confirm('Sure to reboot line?')\">Reboot</a> | <a href=\"?action=netcheck&line_name={$rs['line_name']}&goip_name={$rs['goip_name']}\">Net_Check</a></td>";
+print <<<EOT
+-->
+	<tr class="even">
+		<td align="center">{$rs['line_name']}</td>
+		<td align="center">{$rs['alive']}</td>
+		<td align="center">{$rs['gsm']}</td>
+		<td align="center">{$rs['oper']}</td>
+		<td align="center">{$rs['csq']}</td>
+		<td align="center">{$rs['call_state']}</td>
+		<td align="center">{$rs['bind_type']}</td>
+		<td align="center">{$rs['sim_team_name']}</td>
+		<td align="center">{$rs['sim_name']}</td>
+		<td align="center">{$rs['imei']}</td>
+		<td align="center">{$rs['zone']}</td>
+		<td align="center">{$rs['zone_tag']}</td>
+		<td align="center">{$rs['disable']}</td>
+		{$op}	
+    </tr>
+
+<!--
+EOT;
+$j++;
+}
+print <<<EOT
+-->
+</table>
+<input type="hIdden" name="boxs" value="{$j}">
+<table wIdth="100%"  border="0" cellspacing="2" cellpadding="2">
+
+
+					<tr>
+						<td  align=center>{$fenye}</td>
+					</tr>
+</table>
+<!--
+EOT;
+}
+else if($action=="modify")
+{
+print <<<EOT
+-->
+<table width="100%" height="25"  border="0" cellpadding="0" cellspacing="0">
+  <tr class="topbg">
+    <td width="8%">&nbsp;</td>
+    <td width="92%" height="25"><strong>Current Location: Modify GoIP Line</strong></td>
+  </tr>
+</table>
+<form method="post" action="device_line.php?action=savemodify&id=$rs[goipid]" name="form1" onSubmit="javascript:return check_pw();">
+  <br>
+  <table wIdth="400" border="0" align="center" cellpadding="2" cellspacing="1" class="border" >
+    <tr class="title"> 
+      <td height="22" colspan="2"> <div align="center"><strong>Modify Goip Line Settings</strong></div></td>
+    </tr>
+    <tr> 
+      <td wIdth="150" align="right" class="tdbg"><strong>GoIP Line ID:</strong></td>
+      <td class="tdbg">$rs[line_name]</td>
+    </tr>
+    <tr>
+      <td wIdth="150" align="right" class="tdbg"><strong>Group:</strong></td>
+      <td class="tdbg">
+          <select name="team_id" style="width:135" onchange="showbind(this.value)">
+	<option value="0" $select >None(for fixed bind mode)</option>
+<!--
+EOT;
+foreach($prsdb as $prs){
+
+if($rs[goip_team_id]==$prs[sim_team_id])
+        $select=' selected';
+else                                                                                                              
+        $select='';
+print <<<EOT
+-->
+        <option value="$prs[sim_team_id]" $select >$prs[sim_team_name]</option>
+
+<!--
+EOT;
+}
+if($rs[goip_team_id]!=0) $display='none'; 
+else $display='';
+print <<<EOT
+-->
+      </select></td>
+    </tr>
+    <tr style="display:{$display}" Id='showbind1'>
+      <td wIdth="150" align="right" class="tdbg"><strong>Plan to bind Sim:</strong></td>
+      <td class="tdbg"><select name="sim_name" style="width:135">                                                 
+	<option value="0">none</option>
+<!--
+EOT;
+$old_plan_sim_name=0;
+foreach($grsdb as $prs){
+
+if($rs[line_name]==$prs[plan_line_name]){
+	$old_plan_sim_name=$prs[sim_name];
+        $select=' selected';
+}
+else                                                                                                              
+        $select='';
+print <<<EOT
+-->
+        <option value="$prs[sim_name]" $select >$prs[sim_name]</option>
+
+<!--
+EOT;
+}
+print <<<EOT
+-->
+
+      </select></td>                                                                                              
+    </tr>
+
+    <tr>
+      <td wIdth="150" align="right" class="tdbg"><strong>Enable line</strong></td>
+      <td class="tdbg">
+        <select name="dev_disable">
+          <option value="0" $ck1>Enable</option>
+          <option value="1" $ck2>Disable</option>
+        </select>
+      </td>
+    </tr>
+	<tr> <td height="20" colspan="2" align="center"  class="tdbg"></td></tr>	
+    <tr> 
+      <td height="40" colspan="2" align="center" class="tdbg">
+	<input name="line_name" type="hIdden" Id="line_name" value="{$rs['line_name']}">
+	<input name="goip_name" type="hIdden" Id="goip_name" value="{$rs['goip_name']}">
+        <input name="old_zone" type="hIdden" Id="old_zone" value="{$rs['goip_zone']}">
+        <input name="old_plan_sim_name" type="hIdden" Id="old_plan_sim_name" value="{$old_plan_sim_name}">
+        <input name="oldname" type="hIdden" Id="oldname" value="{$rs['goip_name']}">
+        <input name="old_team_id" type="hIdden" Id="old_team_id" value="{$rs['goip_team_id']}">
+        <input name="old_disable" type="hIdden" Id="old_disable" value="{$rs['dev_disable']}">
+        <input  type="submit" name="Submit" value="Save" style="cursor:hand;"> 
+        &nbsp; <input name="Cancel" type="button" Id="Cancel" value="Cancel" onClick="window.location.href='device_line.php?name=$rs[goip_name]'" style="cursor:hand;"></td>
+    </tr>
+  </table>
+</form>
+<!--
+EOT;
+}
+print <<<EOT
+-->
+<script language="JavaScript" type="text/JavaScript">
+function check_pw()
+{
+  if(document.form1.Password.value=="" && document.form1.Submit.value=="Save")
+        return true;
+  if(document.form1.Password.value=="")
+    {
+      alert("Please input password!");
+          document.form1.Password.focus();
+      return false;
+    }
+    
+  if((document.form1.Password.value)!=(document.form1.PwdConfirm.value))
+    {
+      alert("Password and Confirm Password are different!");
+          document.form1.PwdConfirm.select();
+          document.form1.PwdConfirm.focus();      
+      return false;
+    }
+}
+</script>
+</form>
+
+					  </td> 
+					</tr>
+</table>
+				
+</body>
+</html>
+<!--
+EOT;
+?>
+-->

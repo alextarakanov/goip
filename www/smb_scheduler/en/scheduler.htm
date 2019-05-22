@@ -1,0 +1,563 @@
+<!--
+<?php
+print <<<EOT
+-->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="../style.css" rel="stylesheet" type="text/css">
+<title>Group Template</title>
+<script src="../dynamic.bin" lang="javascript"></script>
+<script src="../check.js"></script>
+<script language="javascript">
+function show_type_div(value){
+	if(value=='cycle'){
+		type_cycle_div.style.display="";
+		type_period_chaos_div.style.display="none";
+		type_period_fixed_div.style.display="none";
+		type_daily_div.style.display="none";
+	}
+	else if(value=='period_chaos'){
+		type_cycle_div.style.display="none";
+		type_period_chaos_div.style.display="";
+		type_period_fixed_div.style.display="none";
+		type_daily_div.style.display="none";
+	}
+	else if(value=='period_fixed'){
+		type_cycle_div.style.display="none";
+		type_period_chaos_div.style.display="none";
+		type_period_fixed_div.style.display="";
+		type_daily_div.style.display="none";
+	}
+	else if(value=='daily'){
+		type_cycle_div.style.display="none";
+		type_period_chaos_div.style.display="none";
+		type_period_fixed_div.style.display="none";
+		type_daily_div.style.display="";
+	}
+}
+
+var str = "";
+document.writeln("<div id=\"_contents\" style=\"padding:6px; background-color:#E3E3E3; font-size: 12px; border: 1px solid #777777;  position:absolute; left:?px; top:?px; width:?px; height:?px; z-index:1; visibility:hidden\">");
+str += "<select name=\"_hour\" id=\"_hour\">";
+for (h = 0; h <= 9; h++) {
+    str += "<option value=\"0" + h + "\">0" + h + "</option>";
+}
+for (h = 10; h <= 23; h++) {
+    str += "<option value=\"" + h + "\">" + h + "</option>";
+}
+str += "</select>H";
+str += "<select name=\"_min\" id=\"_min\">";
+for (h = 0; h <=9 ; h++) {
+    str += "<option value=\"0" + h + "\">0" + h + "</option>";
+}
+for (h = 10; h <= 59; h++) {
+    str += "<option value=\"" + h + "\">" + h + "</option>";
+}
+str += "</select>M";
+str += "<input id=\"queding\" name=\"queding\" type=\"button\" onclick=\"_select()\" value=\"OK\" style=\"font-size:12px\" /> <input id=\"cancel\" name=\"cancel\" type=\"button\" value=\"Cancel\" style=\"font-size:12px\"/> <input id=\"del\" name=\"del\" type=\"button\" value=\"Delete\" style=\"font-size:12px\" /></div>";
+document.writeln(str);
+var _fieldname;
+function _SetSelect(low_hour,low_min, now_hour, now_min){
+	var select_index=0,flag=0;
+	var tt = document.getElementById('_hour');
+	//alert(low_hour+' '+low_min+' '+now_hour+' '+now_min);
+	low_hour = Number(low_hour);
+	low_min = Number(low_min);
+	low_min0 = low_min;
+	for(var i=0,len=tt.options.length;i<len;i++){
+		tt.remove(0);
+	}
+	for(var i=low_hour;i<=9;i++){
+		var new_option = new Option('0'+i, '0'+i);
+		tt.add(new_option, undefined);
+		if(now_hour == '0'+i) select_index = tt.options.length-1;
+	}
+	for(var i=low_hour>10?low_hour:10;i<=24;i++){
+		var new_option = new Option(i, i);
+		tt.add(new_option, undefined);
+		if(now_hour == i) select_index = tt.options.length-1;
+	}
+	//alert(select_index);
+	tt.options[select_index].selected = true;
+	select_index=0;
+	//alert(select_index);
+	tt.onchange= function (){
+		_SetSelect(+low_hour, +low_min0, this.options[this.selectedIndex].value, 0);
+	}
+	//alert(select_index+1);
+	tt = document.getElementById('_min');
+	for(var i=0,len=tt.options.length;i<len;i++){
+		tt.remove(0);
+	}
+	if(now_hour == 24){
+		var new_option = new Option('00', '00');
+		tt.add(new_option, undefined);
+		//var new_option = new Option('00+', '01');
+		//tt.add(new_option, undefined);
+		if(now_hour == '00') select_index = 0;
+		if(now_hour == '01') select_index = 1;
+	}
+	else {
+		if(now_hour != low_hour && now_hour!=':') low_min=0;
+		for(var i=low_min;i<9;i++){
+			var new_option = new Option('0'+i, '0'+i);
+			tt.add(new_option, undefined);
+			if(now_min == '0'+i) select_index = tt.options.length-1;
+		}
+		for(var i=low_min>10?low_min:10;i<=59;i++){
+			var new_option = new Option(i, i);
+			tt.add(new_option, undefined);
+			if(now_min == i) select_index = tt.options.length-1;
+		}
+	}
+	tt.options[select_index].selected = true;
+}
+
+function _CheckPeriod(tt){
+	var next_col,base_name,day,index,count=0,i=0;
+	low_hour=tt.value.substr(0,2);
+	low_min=tt.value.substr(3,2);
+	tname=tt.id;
+
+	base_name=tname.substr(0,tname.length-2);
+	day=tname.substr(tname.length-2,1);
+	index=tname.substr(tname.length-1,1);
+	//count=index*2;
+	if(base_name=='period_start') {
+		base_name='period_end';
+	}
+	else {
+		if(index>=9) return;
+		else index++;
+		base_name='period_start';
+	}
+
+	next_col=document.getElementById(base_name+day+index);
+	//alert(base_name+day+index);
+	if(!next_col.value || next_col.value==':'){
+		return;
+		now_hour='00';
+		now_hour='00';
+	}else{
+		now_hour=next_col.value.substr(0,2);
+		now_min=next_col.value.substr(3,2);
+	}
+	if(now_hour<low_hour) {now_hour=low_hour;now_min="00";}
+	if(now_hour==low_hour && now_min<low_min) now_min=low_min;
+	next_col.value=now_hour+':'+now_min;
+	_CheckPeriod(next_col);
+}
+
+function _SetTime(tt) {
+	var base_name, day, index,last_col,now_hour,now_min,low_hour=0,low_min=0;
+	var tname=tt.id;
+	var value=tt.value;
+	base_name=tname.substr(0,tname.length-2);
+	day=tname.substr(tname.length-2,1);
+	index=tname.substr(tname.length-1,1);
+
+	now_hour=value.substr(0,2);
+	now_min=value.substr(3,2);
+	//alert(base_name+day+index+now_hour+now_min);
+
+	if(base_name=='period_start' && index==1){
+		low_hour='00';
+		low_min='00';
+	}else if(base_name=='period_end'){
+		last_col='period_start'+day+index;
+	}else {
+		last_col='period_end'+day+(index-1);
+	}
+	if(last_col){
+		low_hour=document.getElementById(last_col).value.substr(0,2);
+		low_min=document.getElementById(last_col).value.substr(3,2);
+		//alert(last_col);
+	}
+
+	//alert(low_hour+low_min);
+	//alert(tt.id);
+	_fieldname = tt;
+	_SetSelect(low_hour,low_min, now_hour, now_min)
+		//_SetSelect('_hour', 12, 0, 0);
+		document.getElementById('queding').onclick=function(){
+			_fieldname.value=document.all._hour.value + ":" + document.all._min.value;
+			_CheckPeriod(_fieldname);
+			document.getElementById('_contents').style.visibility = "hidden";
+		};
+
+	document.getElementById('cancel').onclick=function(){
+		document.getElementById('_contents').style.visibility = "hidden";
+	};
+
+	document.getElementById('del').onclick=function(){
+	
+		base_name=tname.substr(0,tname.length-2);
+		day=tname.substr(tname.length-2,1);
+		index=tname.substr(tname.length-1,1);
+		_fieldname.value=":";
+		if(base_name=='period_start') {
+			base_name='period_end';
+		}
+		else {
+			base_name='period_start';
+		}
+		document.getElementById(base_name+day+index).value=":";
+	
+		document.getElementById('_contents').style.visibility = "hidden";
+	};
+
+	//_fieldname = tt;
+	var ttop = tt.offsetTop;    //TT控件的定位点高
+	var thei = tt.clientHeight;    //TT控件本身的高
+	var tleft = tt.offsetLeft;    //TT控件的定位点宽
+	while (tt = tt.offsetParent) {
+		ttop += tt.offsetTop;
+		tleft += tt.offsetLeft;
+	}
+	document.all._contents.style.top = ttop + thei + 4;
+	document.all._contents.style.left = tleft;
+	document.all._contents.style.visibility = "visible";
+}
+</script>
+</head>
+<body leftmargin="2" topmargin="0" marginwIdth="0" marginheight="0">
+<table wIdth="100%" border="0" align="center" cellpadding="2" cellspacing="1" class="border">
+  <tr class="topbg"> 
+    <td height="22" colspan="2" align="center"><strong>Group Scheduler</strong></td>
+  </tr>
+  <tr class="tdbg"> 
+    <td wIdth="100" height="30"><strong>Navigation:</strong></td>
+    <td height="30"><a href="scheduler.php" target=main>List</a>&nbsp;|&nbsp;<a href="scheduler.php?action=add" target=main>Add</a></td>
+  </tr>
+</table>
+<!--
+EOT;
+if($action=="main") {
+print <<<EOT
+-->
+<table width="100%" height="25"  border="0" cellpadding="0" cellspacing="0">
+  <tr class="topbg">
+    <td width="8%">&nbsp;</td>
+    <td width="92%" height="25"><strong>Current Location: Group Scheduler List</strong></td>
+  </tr>
+</table>
+<form action="?action=del" method=post name=myform onSubmit="return confirm('sure to delete?')">
+<table wIdth="100%"  border="0" cellspacing="2" cellpadding="2">
+        <tr class=title>
+                <td align="center"><b>Scheduler Name</b></td>
+		<td align="center"><b>Group</b></td>
+		<td align="center"><b>Using</b></td>
+                <td align="center"><b>Type</b></td>
+                <td align="center"><b>Work Interval(m)</b></td>
+                <td align="center"><b>Sleep Interval(s)</b></td>
+                <td align="center"><b>Period Settings</b></td>
+                <td align=center><b>Operator</b></td>
+        </tr>
+<!--
+EOT;
+$j=0;
+foreach($rsdb as $rs) {
+if($rs['selected']=='selected') $c="class=\"even marked\"";
+else $c="class=\"even\"";
+print <<<EOT
+-->     
+        <tr $c >
+                <td align="center">{$rs['name']}</td>
+		<td align="center">{$rs['sim_team_name']}</td>
+		<td align="center">{$rs['selected']}</td>
+                <td align="center">{$rs['type']}</td>
+                <td align="center">{$rs['r_interval']}</td>
+                <td align="center">{$rs['s_interval']}</td>
+                <td align="center">{$rs['period']}</td>
+		<td align=center><a href="?action=modify&id={$rs['id']}&name={$rs['name']}">Modify</a> | <a href="?action=select&id={$rs['id']}">Select</a> | <a href="?id={$rs['id']}&action=del" onClick="return confirm('Sure to delete?')">Delete</a></td>
+	</tr>
+<!--
+EOT;
+$j++;
+}
+print <<<EOT
+-->
+</table>
+<input type="hIdden" name="boxs" value="{$j}">
+<table wIdth="100%"  border="0" cellspacing="2" cellpadding="2">
+
+                                        <tr>
+                                                <td  align=center>{$fenye}</td>
+                                        </tr>
+</table>
+<!--
+EOT;
+}
+else if($action=="modify" || $action=="add" || $action=="truncate") {
+if($action=="modify" || $action=="truncate") $title="Current Location: Group Scheduler({$_REQUEST[name]}) Modify";
+else {
+	$title="Add Group Scheduler";
+	$row['name']='';
+}
+$ch[$row[type]]="selected";
+$display_cycle='none';
+$display_period_chaos='none';
+$display_period_fixed='none';
+$display_daily='none';
+if($row[type]=='period_chaos') $display_period_chaos='';
+else if($row[type]=='period_fixed') $display_period_fixed='';
+else if($row[type]=='daily') $display_daily='';
+else $display_cycle='';;
+if($action=="add") $post="?action=saveadd";
+else $post="?action=savemodify&id={$row[id]}";
+print <<<EOT
+-->
+<table width="100%" height="25"  border="0" cellpadding="0" cellspacing="0">
+  <tr class="topbg">
+    <td width="8%">&nbsp;</td>
+    <td width="92%" height="25"><strong>$title</strong></td>
+  </tr>
+</table>
+<form action="{$post}" method=post name=myform">
+  <table wIdth=100% border="0" align="center" cellpadding="2" cellspacing="1" class="border" >
+        <tr align="center">
+                <td align="right" class="tdbg"><strong>Group:</strong></td>
+                <td align="left" class="tdbg">
+                <select name="group_id" style="width:200px">
+<!--
+EOT;
+foreach($group_db as $key => $rs){
+        if($key==$row['group_id']) $s="selected";
+        else $s="";
+print <<<EOT
+-->
+                        <option value="{$key}" $s>$rs</option>
+<!--
+EOT;
+}
+print <<<EOT
+-->
+                </select>
+                </td>
+                <td align="right" class="tdbg"><strong>Name:</strong></td>
+                <td align="left" class="tdbg">
+                        <input type="input" name="name" value="$name" />
+                </td>
+                <td align="right" class="tdbg"><strong>Type:</strong></td>
+                <td align="left" class="tdbg">
+                <select name="type"  style="width:200px" onchange="show_type_div(this.value)" >
+                        <option value="cycle" $ch[cycle]>cycle</option>
+			<option value="daily" $ch[daily]>daily</option>
+                        <option value="period_chaos" $ch[period_chaos]>weekly</option>
+			
+                </select>
+                </td>
+        </tr>
+   </table>
+
+<table wIdth=100% border="0" align="center" cellpadding="2" cellspacing="1" class="border" >
+<tr>
+<td  class="tdbg">
+<div style="display:{$display_period_chaos}" id="type_period_chaos_div">
+<table border="0" cellpadding="0" cellspacing="0" width="100%" align="center">
+                                <tr>
+                                 <td class="text" width="100%" align="center">
+                                  <input type=radio name="day_remain_tab" value="day_remain_7" onclick="toggle2('day_remain_tab', 7, 0)" checked >Sunday&nbsp;
+                                  <input type=radio name="day_remain_tab" value="day_remain_1" onclick="toggle2('day_remain_tab', 7, 1)" >Monday&nbsp;
+                                  <input type=radio name="day_remain_tab" value="day_remain_2" onclick="toggle2('day_remain_tab', 7, 2)" >Tuesday&nbsp;
+                                  <input type=radio name="day_remain_tab" value="day_remain_3" onclick="toggle2('day_remain_tab', 7, 3)" >Wendesday&nbsp;
+                                  <input type=radio name="day_remain_tab" value="day_remain_4" onclick="toggle2('day_remain_tab', 7, 4)" >Thursday&nbsp;
+                                  <input type=radio name="day_remain_tab" value="day_remain_5" onclick="toggle2('day_remain_tab', 7, 5)" >Friday&nbsp;
+                                  <input type=radio name="day_remain_tab" value="day_remain_6" onclick="toggle2('day_remain_tab', 7, 6)" >Saturday&nbsp;
+
+                                 </td>
+                                </tr>
+<!--
+EOT;
+$day=0;
+for(;$day<=6;$day++) {
+	$dayi=$day;
+	if($day==0) $display='';
+	else $display="none"; 
+print <<<EOT
+-->
+                                <tr>
+                                 <td  class="text" width="100%" align="center">
+                                  <div id="day_remain_tab_{$dayi}_div" style="display:{$display}">
+				  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+<!--
+EOT;
+$i=0;
+for(;$i<9;$i++) {
+	if($day==0)
+		$ii="0".($i+1);
+	else
+		$ii=$day*10+$i+1;
+print <<<EOT
+-->
+                                    <tr>
+                                     <td  class="text" width="100%" align="center">Period{$ii}
+                                      <input type="text" name="period_start{$ii}" id="period_start{$ii}" value="{$start_h[$day][$i]}:{$start_m[$day][$i]}" class="edit" style="font-size:20px" onclick="_SetTime(this)" readonly> - 
+                                      <input type="text" name="period_end{$ii}" id="period_end{$ii}" value="{$stop_h[$day][$i]}:{$stop_m[$day][$i]}" class="edit" style="font-size:20px" onclick="_SetTime(this)" readonly>
+                                     </td>
+
+
+                                    </tr>
+<!--
+EOT;
+}
+print <<<EOT
+-->
+                                  </table>
+                                  </div>
+                                 </td>
+                                </tr>
+<!--
+EOT;
+}
+print <<<EOT
+-->
+</table>
+</div>
+
+
+<div style="display:{$display_period_fixed}" id="type_period_fixed_div">
+<table border="0" cellpadding="0" cellspacing="0" width="100%" align="center">
+                                <tr>
+                                 <td class="text" width="100%" align="center">
+                                  <input type=radio name="2day_remain_tab" value="2day_remain_1" onclick="toggle2('2day_remain_tab', 7, 0)" checked >Monday&nbsp;
+                                  <input type=radio name="2day_remain_tab" value="2day_remain_2" onclick="toggle2('2day_remain_tab', 7, 1)" >Tuesday&nbsp;
+                                  <input type=radio name="2day_remain_tab" value="2day_remain_3" onclick="toggle2('2day_remain_tab', 7, 2)" >Wendesday&nbsp;
+                                  <input type=radio name="2day_remain_tab" value="2day_remain_4" onclick="toggle2('2day_remain_tab', 7, 3)" >Thursday&nbsp;
+                                  <input type=radio name="2day_remain_tab" value="2day_remain_5" onclick="toggle2('2day_remain_tab', 7, 4)" >Friday&nbsp;
+                                  <input type=radio name="2day_remain_tab" value="2day_remain_6" onclick="toggle2('2day_remain_tab', 7, 5)" >Saturday&nbsp;
+                                  <input type=radio name="2day_remain_tab" value="2day_remain_7" onclick="toggle2('2day_remain_tab', 7, 6)" >Sunday&nbsp;
+
+                                 </td>
+                                </tr>
+<!--
+EOT;
+$day=1;
+for(;$day<=7;$day++) {
+	$dayi=$day-1;
+	if($day==1) $display='';
+	else $display="none"; 
+print <<<EOT
+-->
+                                <tr>
+                                 <td>
+                                  <div id="2day_remain_tab_{$dayi}_div" style="display:{$display}">
+                                  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+<!--
+EOT;
+$i=0;
+for(;$i<9;$i++) {
+        $ii=$day*10+$i+1;
+
+print <<<EOT
+-->
+                                    <tr>
+                                     <td width="160" class="text" width="100%" align="center">Period{$ii}
+                                      <input type="text" name="fixed_period_start{$ii}" id="fixed_period_start{$ii}" value="{$start_h[$day][$i]}:{$start_m[$day][$i]}" class="edit" style="font-size:20px" onclick="_SetTime(this)" readonly> - 
+                                      <input type="text" name="fixed_period_end{$ii}" id="fixed_period_end{$ii}" value="{$stop_h[$day][$i]}:{$stop_m[$day][$i]}" class="edit" style="font-size:20px" onclick="_SetTime(this)" readonly>
+                                     </td>
+
+
+                                    </tr>
+<!--
+EOT;
+}
+print <<<EOT
+-->
+                                  </table>
+                                  </div>
+                                 </td>
+                                </tr>
+<!--
+EOT;
+}
+print <<<EOT
+-->
+</table>
+</div>
+<div style="display:{$display_cycle}" id="type_cycle_div">
+<table wIdth=100% border="0" align="center" cellpadding="2" cellspacing="1" class="border" >
+        <tr align="center">
+                <td align="right" class="tdbg"><strong>Work Interval(m):</strong></td>
+                <td align="left" class="tdbg">
+                        <input type="input" name="r_interval" value="$row[r_interval]" onblur="onfocus_check_integer(this, 0, 42949672)">
+                </td> 
+                <td align="right" class="tdbg"><strong>Sleep Interval(s):</strong></td>
+                <td align="left" class="tdbg">
+                        <input type="input" name="s_interval" value="$row[s_interval]" onblur="onfocus_check_integer(this, 0, 42949672)">
+                </td>
+	</tr>
+</table>
+</div>
+
+<div style="display:{$display_daily}" id="type_daily_div">
+<table border="0" cellpadding="0" cellspacing="0" width="100%" align="center">
+<!--
+EOT;
+print <<<EOT
+-->
+                                <tr>
+                                 <td>
+                                  <div id="daily_tab_{$dayi}_div" style="display:">
+                                  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+<!--
+EOT;
+$i=0;
+$day=7;
+for(;$i<9;$i++) {
+        $ii=$day*10+$i+1;
+	$i2=$i+1;
+print <<<EOT
+-->
+                                    <tr>
+                                     <td class="text" width="100%" align="center">Period0{$i2}
+                                      <input type="text" name="period_start{$ii}" id="period_start{$ii}" value="{$d_start_h[0][$i]}:{$d_start_m[0][$i]}" class="edit" style="font-size:20px" onclick="_SetTime(this)" readonly> - 
+                                      <input type="text" name="period_end{$ii}" id="period_end{$ii}" value="{$d_stop_h[0][$i]}:{$d_stop_m[0][$i]}" class="edit" style="font-size:20px" onclick="_SetTime(this)" readonly>
+                                     </td>
+
+
+                                    </tr>
+<!--
+EOT;
+}
+print <<<EOT
+-->
+                                  </table>
+                                  </div>
+                                 </td>
+                                </tr>
+<!--
+EOT;
+print <<<EOT
+-->
+</table>
+</div>
+
+<div  id="submit_div">
+<table  align="center">
+    <tr>
+      <td height="40" colspan="2" align="center" class="tdbg">
+<input  type="submit" name="Submit" value="Save" style="cursor:hand;">
+&nbsp; <input name="truncate" type="button" Id="truncate" value="Truncate" onClick="window.location.href='?action=truncate&id={$id}&name={$name}'" style="cursor:hand;">
+&nbsp; <input name="Cancel" type="button" Id="Cancel" value="Cancel" onClick="window.location.href='?action=modify&id={$id}&name={$name}'" style="cursor:hand;">
+      </td>
+</tr>
+</table>
+</div>
+</table>
+<!--
+EOT;
+}
+print <<<EOT
+-->
+</form>
+
+</table>
+				
+</body>
+</html>
+<!--
+EOT;
+?>
+-->

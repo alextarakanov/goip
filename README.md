@@ -13,6 +13,6 @@ docker-compose up install
 docker-compose down
 `
 then change docker-compose.yaml again and exec
-`
-docker-compose up 
-`
+
+`<docker-compose up >` 
+

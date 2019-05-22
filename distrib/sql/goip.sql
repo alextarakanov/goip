@@ -20,7 +20,7 @@
 --
 -- Table structure for table `crowd`
 --
-GRANT all ON goip.* TO goip@'%' IDENTIFIED BY 'goip';
+-- GRANT all ON goip.* TO goip@'%' IDENTIFIED BY 'goip';
 DROP database IF EXISTS `goip`;
 create database goip CHARACTER SET utf8 COLLATE utf8_general_ci;
 use goip;

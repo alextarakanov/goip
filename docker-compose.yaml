@@ -137,13 +137,8 @@ services:
    - ./security/db.env
    - ./.env
   volumes:
-   - ./distrib/script/smb_install.sh:/smb_install.sh:ro
-   - ./distrib/script/goip_install.sh:/goip_install.sh:ro
+   - ./distrib/script/install.sh:/install.sh:ro
    - ./distrib/sql/scheduler.sql:/scheduler.sql:ro
    - ./distrib/sql/goip.sql:/goip.sql:ro
-   - ./www/smb_scheduler/scheduler.sql:/scheduler.sql:ro
-  # tty: true
-  # stdin_open: true
-  # entrypoint: [ "/smb_install.sh"]
-  # entrypoint: [ "/goip_install.sh"]
+#  entrypoint: [ "/install.sh"]
   entrypoint: ["echo", "Service install disabled"]

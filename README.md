@@ -17,7 +17,7 @@ ___security/db.env___
 ___security/radmin.env___
 
 
-In thish step, create databases and add tables with users  
+Thith step, create databases and add tables with users  
 uncomment string for install  
 entrypoint: [ "/install.sh"]
 
@@ -25,10 +25,10 @@ entrypoint: [ "/install.sh"]
 exec from cli  
 `docker-compose up install`
 
-after  
+then  
 `docker-compose down`
 
-then change docker-compose.yaml again and exec  
+then change docker-compose.yaml again (comment install service) and run  
 `docker-compose up` 
 
 ***

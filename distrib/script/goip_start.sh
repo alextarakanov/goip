@@ -1,19 +1,11 @@
 #!/bin/bash
 
 
-# tar xvzf /distrib/goip_install-v1.26.tar.gz -C / &&
-# cp -f /goip_install/goip /usr/local/goip 
-
-# sed -i "s/\$dbhost='localhost';/\$dbhost='${IP_MYSQL}';/" /usr/local/goip/inc/config.inc.php &&
-# sed -i "s/\$dbuser='goip';/\$dbuser='${MYSQL_USER}';/" /usr/local/goip/inc/config.inc.php &&
-# sed -i "s/\$dbpw='goip';/\$dbpw='${MYSQL_PASSWORD}';/" /usr/local/goip/inc/config.inc.php &&
-
-
 echo "<?php 
 \$dbhost='${IP_MYSQL}';
-\$dbuser='${MYSQL_USER}';
-\$dbpw='${MYSQL_PASSWORD}';
-\$dbname='${MYSQL_DATABASE}';
+\$dbuser='${GOIP_MYSQL_USER}';
+\$dbpw='${GOIP_MYSQL_PASSWORD}';
+\$dbname='${GOIP_MYSQL_DATABASE}';
 \$goipcronport='${GOIPCRONPORT}';
 \$goipdocker='${GOIP_DOCKER_LOCALNET_IP}';
 \$charset='utf8';

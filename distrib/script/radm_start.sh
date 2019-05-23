@@ -12,5 +12,5 @@ while true ; do
         date
         echo "radmin is runing";
 	fi
-	sleep 5
+	sleep 30
 done

@@ -1,19 +1,21 @@
 #!/bin/bash
 
-cp -fR /mnt/www/goip /var/www/html/
-cp -fR /mnt/www/smb_scheduler /var/www/html/smb
+WWW_DIR=/var/www/html
+
+cp -fR /mnt/www/goip $WWW_DIR/goip
+cp -fR /mnt/www/smb_scheduler $WWW_DIR/smb
 
 echo "<?php 
 \$dbhost='${IP_MYSQL}';
-\$dbuser='${MYSQL_USER}';
-\$dbpw='${MYSQL_PASSWORD}';
-\$dbname='${MYSQL_DATABASE}';
+\$dbuser='${GOIP_MYSQL_USER}';
+\$dbpw='${GOIP_MYSQL_PASSWORD}';
+\$dbname='${GOIP_MYSQL_DATABASE}';
 \$goipcronport='${GOIPCRONPORT}';
 \$goipdocker='${GOIP_DOCKER_LOCALNET_IP}';
 \$charset='utf8';
 \$endless_send=0;
 \$re_ask_timer=3;
-?>" > /var/www/html/goip/inc/config.inc.php
+?>" > $WWW_DIR/goip/inc/config.inc.php
 
 
 
@@ -72,7 +74,7 @@ define('SMS_CLIENT_ID', 82);
 define('IMEI_IMSI_INFO', 75);
 define('AUTO_DIAL', 131);
 
-?>"   > /var/www/html/smb/inc/config.inc.php
+?>"   > $WWW_DIR/smb/inc/config.inc.php
 
 
 exec /usr/sbin/apache2ctl -D FOREGROUND

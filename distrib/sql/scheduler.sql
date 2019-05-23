@@ -16,9 +16,9 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 -- GRANT all ON scheduler.* TO scheduler@'%' IDENTIFIED BY 'scheduler';
-DROP database IF EXISTS `scheduler`;
-create database scheduler CHARACTER SET utf8 COLLATE utf8_general_ci;
-use scheduler;
+-- DROP database IF EXISTS `scheduler`;
+-- create database scheduler CHARACTER SET utf8 COLLATE utf8_general_ci;
+-- use scheduler;
 
 --
 -- Table structure for table `call_record`

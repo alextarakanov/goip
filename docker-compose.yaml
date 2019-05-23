@@ -12,6 +12,27 @@ networks:
       gateway: ${DOCKER_GW}
 
 services:
+#first install uncomment entrypoint and run
+#docker-compose up install  
+ install:
+  depends_on:
+   - "db"
+  networks:
+   goipnet:
+    ipv4_address: ${INSTALL_IP}
+  privileged: true
+  image: ${GOIP_DOCKER_IMAGE}
+  container_name: install
+  hostname: install
+  env_file: 
+   - ./security/db.env
+   - ./.env
+  volumes:
+   - ./distrib/script/install.sh:/install.sh:ro
+   - ./distrib/sql/scheduler.sql:/scheduler.sql:ro
+   - ./distrib/sql/goip.sql:/goip.sql:ro
+  # entrypoint: [ "/install.sh"]
+  entrypoint: ["echo", "Service install disabled"]
 
  goip:
   depends_on:
@@ -21,7 +42,7 @@ services:
    goipnet:
     ipv4_address: ${GOIP_DOCKER_LOCALNET_IP}
   privileged: true
-  image: cr80/goip:v.0.1.1
+  image: ${GOIP_DOCKER_IMAGE}
   container_name: ${GOIP_NAME}
   hostname: ${GOIP_NAME}
   env_file: 
@@ -45,7 +66,7 @@ services:
    goipnet:
     ipv4_address: ${SMB_DOCKER_LOCALNET_IP}
   privileged: true
-  image: cr80/goip:v.0.1.1
+  image: ${GOIP_DOCKER_IMAGE}
   container_name: ${SMB_NAME}
   hostname: ${SMB_NAME}
   env_file: 
@@ -70,7 +91,7 @@ services:
    goipnet:
     ipv4_address: ${RADM_DOCKER_LOCALNET_IP}
   privileged: true
-  image: cr80/goip:v.0.1.1
+  image: ${GOIP_DOCKER_IMAGE}
   container_name: ${RADM_NAME}
   hostname: ${RADM_NAME}
   volumes:
@@ -123,22 +144,3 @@ services:
   image: athimel/apache2-php5-mysql
   entrypoint: ["/web_start.sh"]
 
- install:
-  depends_on:
-   - "db"
-  networks:
-   goipnet:
-    ipv4_address: ${INSTALL_IP}
-  privileged: true
-  image: cr80/goip:v.0.1.1
-  container_name: install
-  hostname: install
-  env_file: 
-   - ./security/db.env
-   - ./.env
-  volumes:
-   - ./distrib/script/install.sh:/install.sh:ro
-   - ./distrib/sql/scheduler.sql:/scheduler.sql:ro
-   - ./distrib/sql/goip.sql:/goip.sql:ro
-#  entrypoint: [ "/install.sh"]
-  entrypoint: ["echo", "Service install disabled"]

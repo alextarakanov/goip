@@ -1,5 +1,5 @@
 version: '2.4'
-
+#this is work version smb, goip server without pbx system
 networks: 
  goipnet:
   name: ${NETWORK_NAME}

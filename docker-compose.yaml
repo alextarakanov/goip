@@ -1,5 +1,5 @@
 version: '2.4'
-
+#git checkout -b asterisk
 networks: 
  goipnet:
   name: ${NETWORK_NAME}

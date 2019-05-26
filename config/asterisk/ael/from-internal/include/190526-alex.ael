@@ -1,0 +1,20 @@
+_190526#7911X. => {
+    Answer();
+    PlayBack(hello);
+    PlayBack(music);
+    for (x=0; ${x} < 3; x=${x} + 1) {
+        Verbose(x is ${x} !);
+    }
+    NoOp(===================);
+    y=2;
+    while (${y} >= 0) {
+        Verbose(y is ${y} !);
+        y=${y}-1;
+    }
+    NoOp(context ${EXTEN} aaaabb);
+//    WaitExten();
+    Wait(2);
+    HangUp();
+}
+
+

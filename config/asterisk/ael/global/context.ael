@@ -1,0 +1,4 @@
+globals {
+    CONSOLE=Console/dsp;
+    MY_VAR=alex;
+};

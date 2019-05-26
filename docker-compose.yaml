@@ -144,3 +144,22 @@ services:
   image: athimel/apache2-php5-mysql
   entrypoint: ["/web_start.sh"]
 
+ asterisk:
+  env_file:
+   - ./.env
+   - ./security/db.env
+  networks:
+   goipnet:
+    ipv4_address: ${ASTERISK_DOCKER_LOCALNET_IP}
+  hostname: ${ASTERISK_NAME}
+  container_name: ${ASTERISK_NAME}
+  # restart: always
+  ports:
+   - ${ASTERISK_EXT_PORT}:${ASTERISK_EXT_PORT}/udp
+  volumes:
+   - ./config/asterisk:/etc/asterisk
+   - ./distrib/script/asterisk_start.sh:/asterisk_start.sh:ro
+   - ./sounds/asterisk/:/sounds/
+  image: ${ASTERISK_IMAGE}
+  entrypoint: ["/asterisk_start.sh"]
+

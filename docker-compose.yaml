@@ -25,14 +25,16 @@ services:
   container_name: install
   hostname: install
   env_file: 
+   - ./security/asterisk.env
    - ./security/db.env
    - ./.env
   volumes:
    - ./distrib/script/install.sh:/install.sh:ro
    - ./distrib/sql/scheduler.sql:/scheduler.sql:ro
    - ./distrib/sql/goip.sql:/goip.sql:ro
-  # entrypoint: [ "/install.sh"]
-  entrypoint: ["echo", "Service install disabled"]
+   - ./distrib/sql/asterisk.sql:/asterisk.sql:ro
+  entrypoint: [ "/install.sh"]
+  # entrypoint: ["echo", "Service install disabled"]
 
  goip:
   depends_on:
@@ -148,6 +150,7 @@ services:
   env_file:
    - ./.env
    - ./security/db.env
+   - ./security/asterisk.env
   networks:
    goipnet:
     ipv4_address: ${ASTERISK_DOCKER_LOCALNET_IP}
@@ -158,6 +161,7 @@ services:
    - ${ASTERISK_EXT_PORT}:${ASTERISK_EXT_PORT}/udp
   volumes:
    - ./config/asterisk:/etc/asterisk
+   - ./distrib/lib/odbc:/lib/odbc
    - ./distrib/script/asterisk_start.sh:/asterisk_start.sh:ro
    - ./sounds/asterisk/:/sounds/
   image: ${ASTERISK_IMAGE}

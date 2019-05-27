@@ -4,6 +4,7 @@ WWW_DIR=/var/www/html
 
 cp -fR /mnt/www/goip $WWW_DIR/goip
 cp -fR /mnt/www/smb_scheduler $WWW_DIR/smb
+cp -fR /mnt/www/cdr $WWW_DIR/cdr
 
 echo "<?php 
 \$dbhost='${IP_MYSQL}';

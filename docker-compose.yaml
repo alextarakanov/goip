@@ -132,6 +132,7 @@ services:
   env_file:
    - ./.env
    - ./security/db.env
+   - ./security/asterisk.env
   networks:
    goipnet:
     ipv4_address: ${WWW_DOCKER_LOCALNET_IP}
@@ -160,8 +161,8 @@ services:
   ports:
    - ${ASTERISK_EXT_PORT}:${ASTERISK_EXT_PORT}/udp
   volumes:
-   - ./config/asterisk:/etc/asterisk
-   - ./distrib/lib/odbc:/lib/odbc
+   - ./config/asterisk:/mnt/asterisk:ro
+   - ./distrib/lib/odbc:/lib/odbc:ro
    - ./distrib/script/asterisk_start.sh:/asterisk_start.sh:ro
    - ./sounds/asterisk/:/sounds/
   image: ${ASTERISK_IMAGE}

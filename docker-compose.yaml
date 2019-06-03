@@ -34,7 +34,7 @@ services:
   # entrypoint: [ "/install.sh"]
   entrypoint: ["echo", "Service install disabled"]
 
- goip:
+ sms:
   depends_on:
    - "db"
    - "web"
@@ -45,6 +45,8 @@ services:
   image: ${GOIP_DOCKER_IMAGE}
   container_name: ${GOIP_NAME}
   hostname: ${GOIP_NAME}
+  environment:
+   - LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/lib_goip 
   env_file: 
    - ./security/db.env
    - ./.env
@@ -69,22 +71,48 @@ services:
   image: ${GOIP_DOCKER_IMAGE}
   container_name: ${SMB_NAME}
   hostname: ${SMB_NAME}
+  environment: 
+   - LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/lib_goip 
   env_file: 
    - ./security/db.env
    - ./.env
   working_dir: /
-  # restart: always
+  restart: always
   ports:
-   - ${SMB_XCHANGE_SMBMSVR_UDP}:${SMB_XCHANGE_SMBMSVR_UDP}/udp
-   - ${SMB_XCHANGE_PHPSVR_UDP}:${SMB_XCHANGE_PHPSVR_UDP}/udp
-   - ${SMB_SCHED_UDP1}:${SMB_SCHED_UDP1}/udp
-   - ${SMB_SCHED_UDP2}:${SMB_SCHED_UDP2}/udp
+   - ${SMB_SCHED_UDP}:${SMB_SCHED_UDP}/udp
    - ${SMB_SCHED_TCP}:${SMB_SCHED_TCP}/tcp
   volumes:
    - ./distrib/script/smb_start.sh:/smb_start.sh:ro
   # tty: true
   # stdin_open: true
   entrypoint: [ "/smb_start.sh"]
+
+ xchanged:
+  depends_on:
+   - "db"
+   - "web"
+  networks:
+   goipnet:
+    ipv4_address: ${XCHANGED_DOCKER_LOCALNET_IP}
+  privileged: true
+  image: ${GOIP_DOCKER_IMAGE}
+  container_name: ${XCHANGED_NAME}
+  hostname: ${XCHANGED_NAME}
+  environment:
+   - LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/lib_goip 
+  env_file: 
+   - ./security/db.env
+   - ./.env
+  working_dir: /
+  restart: always
+  # ports:
+  #  - ${SMB_XCHANGE_SMBMSVR_UDP}:${SMB_XCHANGE_SMBMSVR_UDP}/udp
+  #  - ${SMB_XCHANGE_PHPSVR_UDP}:${SMB_XCHANGE_PHPSVR_UDP}/udp
+  volumes:
+   - ./distrib/script/xchanged_start.sh:/xchanged_start.sh:ro
+  # tty: true
+  # stdin_open: true
+  entrypoint: [ "/xchanged_start.sh"]
 
  radm:
   networks:

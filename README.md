@@ -9,6 +9,14 @@ cd ./goip
 create container  
 docker build  -f ./19052001_goip.Dockerfile -t cr80/goip:v.0.1.1  . 
 
+smb V1.9 Build 201712  
+http://you_ip/smb
+
+
+goip V1.26 Build 201904  
+http://you_ip/goip
+
+
 
 edit (set variables):  
 ___docker-compose.yaml___  

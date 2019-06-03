@@ -1,24 +1,6 @@
 #!/bin/bash
 
-WWW_DIR=/var/www/html
-
-cp -fR /mnt/www/goip $WWW_DIR/goip
-cp -fR /mnt/www/smb_scheduler $WWW_DIR/smb
-
-echo "<?php 
-\$dbhost='${IP_MYSQL}';
-\$dbuser='${GOIP_MYSQL_USER}';
-\$dbpw='${GOIP_MYSQL_PASSWORD}';
-\$dbname='${GOIP_MYSQL_DATABASE}';
-\$goipcronport='${GOIPCRONPORT}';
-\$goipdocker='${GOIP_DOCKER_LOCALNET_IP}';
-\$charset='utf8';
-\$endless_send=0;
-\$re_ask_timer=3;
-?>" > $WWW_DIR/goip/inc/config.inc.php
-
-
-
+echo 'start goipcon' 
 echo "
 <?php 
 \$dbhost='${IP_MYSQL}';	//database server 
@@ -74,7 +56,23 @@ define('SMS_CLIENT_ID', 82);
 define('IMEI_IMSI_INFO', 75);
 define('AUTO_DIAL', 131);
 
-?>"   > $WWW_DIR/smb/inc/config.inc.php
+?>" > /config_xchange.conf
 
+# exec export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/lib_goip 
 
-exec /usr/sbin/apache2ctl -D FOREGROUND
+while true ; do
+    CHECK_PROC=`ps axf | grep '/usr/local/bin/xchanged' | grep -v grep | wc -l`
+	if [  $CHECK_PROC -lt 1 ]; then
+        echo 'kill process xchanged'
+        kill `pidof xchanged` 
+        sleep 1
+		echo "start process xchanged"
+		exec /usr/local/bin/xchanged -f /config_xchange.conf
+        sleep 1
+    else
+        date
+        echo "smb_scheduler is runing";
+	fi
+	sleep 10
+    
+done

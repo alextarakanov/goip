@@ -1,0 +1,4 @@
+context default {
+    _X. => HangUp();
+      s => Hangup();
+};

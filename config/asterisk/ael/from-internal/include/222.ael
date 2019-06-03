@@ -1,0 +1,8 @@
+222 => {
+    y=10;
+    while (${y} >= 0) {
+        Verbose(y is ${y} !);
+        y=${y}-1;
+    }
+    HangUp();
+}

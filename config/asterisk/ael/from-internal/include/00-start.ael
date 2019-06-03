@@ -1,0 +1,12 @@
+_. => {
+    NoOp(context TOTAL);
+    HangUp();
+}
+
+s => {
+    NoOp(context s);
+    HangUp();
+}
+
+
+
